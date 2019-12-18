@@ -10,48 +10,48 @@ class Board(QWidget):
 	def __init__(self, parent):
 		super(Board, self).__init__(parent)
 
-		board = QGridLayout()
-
 		width = 12
 		height = 10
+		self.generate_board(width, height)
 
+
+		self.setLayout(self.board)
+		self.show()
+
+
+	def generate_board(self, width, height):
 		self.buttons = [[0 for x in range(width)] for y in range(height)]
-
-		arrow = QPixmap('objects/arrow_green.png')
-		#arrow = arrow.scaled(50, 50) #nie działa, zmniejsza się, ale w pewnym momencie nie chce się już zwiększyć xd
-		rotation = 90
-		left = arrow
-		up = arrow.transformed(QTransform().rotate(rotation), Qt.SmoothTransformation)
-		down = arrow.transformed(QTransform().rotate(-rotation), Qt.SmoothTransformation)
-		right = arrow.transformed(QTransform().rotate(2*rotation), Qt.SmoothTransformation)
-
+		self.board = QGridLayout()
 		for i in range(height):
 			for j in range(width):
 				self.buttons[i][j] = QPushButton()
-				if i is 0 and j is width-1:
-					self.buttons[i][j].setStyleSheet('height: 60px; width: 60px; border-image: url("objects/arrow_green_down.png");')
-				elif i is height-1 and j is 0:
-					self.buttons[i][j].setStyleSheet('height: 60px; width: 60px; border-image: url("objects/arrow_green_up.png");')
-				#a to całą resztę
-				elif i is 0:
-					self.buttons[i][j].setStyleSheet('height: 60px; width: 60px; border-image: url("objects/arrow_green_right.png");')
-				elif i is height-1:
-					self.buttons[i][j].setStyleSheet('height: 60px; width: 60px; border-image: url("objects/arrow_green_left.png");')
-				elif j is 0:
-					self.buttons[i][j].setStyleSheet('height: 60px; width: 60px; border-image: url("objects/arrow_green_up.png");')
-				elif j is width-1:
-					self.buttons[i][j].setStyleSheet('height: 60px; width: 60px; border-image: url("objects/arrow_green_down.png");')
-				else:
-					self.buttons[i][j].setText("")
 
-				board.addWidget(self.buttons[i][j], i, j)
+		for j in range(width):
+			self.set_button_stylesheet(self.buttons[0][j], 'objects/arrow_green_right.png')
+			self.set_button_stylesheet(self.buttons[height - 1][j], 'objects/arrow_green_left.png')
+			self.board.addWidget(self.buttons[0][j], 0, j)
+			self.board.addWidget(self.buttons[height - 1][j], height - 1, j)
 
+		for i in range(height):
+			self.set_button_stylesheet(self.buttons[i][0], 'objects/arrow_green_up.png')
+			self.set_button_stylesheet(self.buttons[i][width - 1], 'objects/arrow_green_down.png')
+			self.board.addWidget(self.buttons[i][0], i, 0)
+			self.board.addWidget(self.buttons[i][width - 1], i, width - 1)
+
+		self.set_button_stylesheet(self.buttons[0][0], 'objects/castle1.png')
+		
 		for i in range(height-2):
 			for j in range(width-2):
 				self.buttons[i+1][j+1].deleteLater()
 
-		self.setLayout(board)
-		self.show()
+		
+	def set_button_stylesheet(self, button, image):
+		str = 'height: 60px; width: 60px; border-image: url("'
+		str += image
+		str += '");'
+		button.setStyleSheet(str)
+		return button
+		
 
 
 class mainWindow(QMainWindow):
