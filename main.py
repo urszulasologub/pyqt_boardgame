@@ -10,9 +10,19 @@ class Board(QWidget):
 	def __init__(self, parent):
 		super(Board, self).__init__(parent)
 
-		width = 12
+		width = 15
 		height = 10
+		max_tiles = width * 2 + height * 2 - 4
+		self.special_tiles = int(max_tiles / 4)
 		self.generate_board(width, height)
+		self.set_hero(0, 0, 1)
+		self.set_hero(height - 1, width - 1, 2)
+
+		self.board.addWidget(QTextEdit("Gracz 1"), 1, 1, height - 2, width / 2 - 1)
+		place = width / 2
+		if width % 2 != 0:
+			place = width / 2 + 1
+		self.board.addWidget(QTextEdit("Gracz 2"), 1, place, height - 2, width / 2 - 1)
 
 
 		self.setLayout(self.board)
@@ -39,14 +49,26 @@ class Board(QWidget):
 			self.board.addWidget(self.buttons[i][width - 1], i, width - 1)
 
 		self.set_button_stylesheet(self.buttons[0][0], 'objects/castle1.png')
+		self.set_button_stylesheet(self.buttons[height - 1][width - 1], 'objects/castle1.png')
 		
-		for i in range(height-2):
-			for j in range(width-2):
-				self.buttons[i+1][j+1].deleteLater()
+		for i in range(height - 2):
+			for j in range(width - 2):
+				self.buttons[i + 1][j + 1].deleteLater()
+
+
+	def set_hero(self, x1, y1, which_one=1):
+		#icon1  = QPixmap('sprites/hero1.png')
+		#self.buttons[x1][y1].setIcon(QIcon(icon1))
+		if which_one == 1:
+			self.set_button_stylesheet(self.buttons[x1][y1], 'sprites/castle1_hero1.png')
+			self.board.addWidget(self.buttons[x1][y1], x1, y1)
+		else:
+			self.set_button_stylesheet(self.buttons[x1][y1], 'sprites/castle1_hero2.png')
+			self.board.addWidget(self.buttons[x1][y1], x1, y1)
 
 		
 	def set_button_stylesheet(self, button, image):
-		str = 'height: 60px; width: 60px; border-image: url("'
+		str = 'height: 60px; width: 60px; background-image: url(None); border-image: url("'
 		str += image
 		str += '");'
 		button.setStyleSheet(str)
@@ -64,6 +86,11 @@ class mainWindow(QMainWindow):
 		self.setWindowTitle("Board game")
 		self.showFullScreen()
 
+
+		self.setStyleSheet("""
+				background-image: url(./UI/map_visual.png);
+				background-attachment: scroll;
+			""")
 
 if __name__ == "__main__":
 	app = QApplication(sys.argv)
