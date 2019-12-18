@@ -18,16 +18,33 @@ class PlayerInfo(QWidget):
 				font-size: 18pt;
 				font: Arial;
 			""")
-		grid = QGridLayout(self)
+		self.grid = QGridLayout(self)
 		castle_image = QPushButton()
 		castle_image.setStyleSheet('border-image: url(UI/castle_inside); min-height: 200px; ')
-		grid.addWidget(castle_image)
+		self.grid.addWidget(castle_image, 0, 0)
 
-		self.labels = [QLabel(player), QLabel('Poziom zamku: 1'), QLabel('Bohaterowie: '), QLabel('Jednostki bohatera: ')]
+		self.labels = [QLabel(player), QLabel('Poziom zamku: 1'), QLabel('Bohaterowie: '), QLabel('Jednostki bohatera: '), QLabel('Złoto: 0')]
 
+		i = 1
 		for label in self.labels:
-			grid.addWidget(label)
-		self.setLayout(grid)
+			self.grid.addWidget(label, i, 0)
+			i += 1
+		self.setLayout(self.grid)
+		self.update_castle_level(2)
+		self.update_gold_amount(5000)
+
+
+	def update_castle_level(self, level):
+		text = 'Poziom zamku: ' + str(level)
+		self.labels[1] = QLabel(text)
+		self.grid.addWidget(self.labels[1], 2, 0)
+				
+	
+	def update_gold_amount(self, amount):
+		text = 'Złoto: ' + str(amount)
+		self.labels[4] = QLabel(text)
+		self.grid.addWidget(self.labels[4], 5, 0)
+
 
 
 class Board(QWidget):
