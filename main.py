@@ -14,13 +14,19 @@ class PlayerInfo(QWidget):
 				background-attachment: scroll;
 				border: 2px solid gray;
 				border-radius: 10px;
+				color: white;
+				font-size: 18pt;
+				font: Arial;
 			""")
 		grid = QGridLayout(self)
 		castle_image = QPushButton()
-		castle_image.setStyleSheet('border-image: url(UI/castle_inside); min-height: 200px;')
+		castle_image.setStyleSheet('border-image: url(UI/castle_inside); min-height: 200px; ')
 		grid.addWidget(castle_image)
-		player_label = QLabel(player)
-		grid.addWidget(player_label)
+
+		self.labels = [QLabel(player), QLabel('Poziom zamku: 1'), QLabel('Bohaterowie: '), QLabel('Jednostki bohatera: ')]
+
+		for label in self.labels:
+			grid.addWidget(label)
 		self.setLayout(grid)
 
 
