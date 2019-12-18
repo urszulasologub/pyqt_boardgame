@@ -12,7 +12,7 @@ class PlayerInfo(QWidget):
 		self.setStyleSheet("""
 				background-image: url(UI/brown_background.jpg);
 				background-attachment: scroll;
-				border: 2px solid gray;
+				border: 2px outset gray;
 				border-radius: 10px;
 				color: white;
 				font-size: 18pt;
@@ -29,6 +29,7 @@ class PlayerInfo(QWidget):
 		for label in self.labels:
 			self.grid.addWidget(label, i, 0)
 			i += 1
+
 		self.setLayout(self.grid)
 		self.update_castle_level(2)
 		self.update_gold_amount(5000)
@@ -47,6 +48,34 @@ class PlayerInfo(QWidget):
 
 
 
+class PlayerActions(QWidget):
+	def __init__(self, parent, player):
+		super(PlayerActions, self).__init__(parent)
+		self.setStyleSheet("""
+				background-image: url(UI/brown_background.jpg);
+				background-attachment: scroll;
+				border: 2px outset gray;
+				border-radius: 10px;
+				color: white;
+				font-size: 18pt;
+				font: Arial;
+				min-height: 70px;
+			""")
+
+
+		self.grid = QGridLayout(self)
+		self.labels = ['Zobacz druzynę', 'Zakończ kolejkę', 'Atakuj', 'Bohater1', 'Bohater2', 'Bohater3']
+		self.buttons = []
+
+		for i in range(len(self.labels)):
+			self.buttons.append(QPushButton(self.labels[i]))
+			self.grid.addWidget(self.buttons[i], i, 0)
+
+			
+		self.setLayout(self.grid)
+
+
+
 class Board(QWidget):
 	def __init__(self, parent):
 		super(Board, self).__init__(parent)
@@ -61,13 +90,14 @@ class Board(QWidget):
 
 		label1 = PlayerInfo(self, 'Gracz 1')
 		self.board.addWidget(label1, 1, 1, height - 2, width / 2 - 1)
+		#only one player, because this widget will be changed depending on whose turn it is
 
+		act = PlayerActions(self, 'Gracz 1')
 		place = width / 2
 		if width % 2 != 0:
 			place = width / 2 + 1
-		label2 = PlayerInfo(self, 'Gracz 2')
-		self.board.addWidget(label2, 1, place, height - 2, width / 2 - 1)
-
+		self.board.addWidget(act, 1, place, height - 2, width / 2 - 1)
+		
 		self.setLayout(self.board)
 		self.show()
 
