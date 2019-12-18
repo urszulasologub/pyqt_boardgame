@@ -12,8 +12,8 @@ class Board(QWidget):
 
 		board = QGridLayout()
 
-		width = 8
-		height = 6
+		width = 12
+		height = 10
 
 		self.buttons = [[0 for x in range(width)] for y in range(height)]
 
@@ -29,18 +29,18 @@ class Board(QWidget):
 			for j in range(width):
 				self.buttons[i][j] = QPushButton()
 				if i is 0 and j is width-1:
-					self.buttons[i][j].setStyleSheet('height: 100px; width: 100px; border-image: url("objects/arrow_green_down.png");')
+					self.buttons[i][j].setStyleSheet('height: 60px; width: 60px; border-image: url("objects/arrow_green_down.png");')
 				elif i is height-1 and j is 0:
-					self.buttons[i][j].setStyleSheet('height: 100px; width: 100px; border-image: url("objects/arrow_green_up.png");')
+					self.buttons[i][j].setStyleSheet('height: 60px; width: 60px; border-image: url("objects/arrow_green_up.png");')
 				#a to całą resztę
 				elif i is 0:
-					self.buttons[i][j].setStyleSheet('height: 100px; width: 100px; border-image: url("objects/arrow_green_right.png");')
+					self.buttons[i][j].setStyleSheet('height: 60px; width: 60px; border-image: url("objects/arrow_green_right.png");')
 				elif i is height-1:
-					self.buttons[i][j].setStyleSheet('height: 100px; width: 100px; border-image: url("objects/arrow_green_left.png");')
+					self.buttons[i][j].setStyleSheet('height: 60px; width: 60px; border-image: url("objects/arrow_green_left.png");')
 				elif j is 0:
-					self.buttons[i][j].setStyleSheet('height: 100px; width: 100px; border-image: url("objects/arrow_green_up.png");')
+					self.buttons[i][j].setStyleSheet('height: 60px; width: 60px; border-image: url("objects/arrow_green_up.png");')
 				elif j is width-1:
-					self.buttons[i][j].setStyleSheet('height: 100px; width: 100px; border-image: url("objects/arrow_green_down.png");')
+					self.buttons[i][j].setStyleSheet('height: 60px; width: 60px; border-image: url("objects/arrow_green_down.png");')
 				else:
 					self.buttons[i][j].setText("")
 
