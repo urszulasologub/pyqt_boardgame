@@ -6,6 +6,24 @@ from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
 
 
+class PlayerInfo(QWidget):
+	def __init__(self, parent, player):
+		super(PlayerInfo, self).__init__(parent)
+		self.setStyleSheet("""
+				background-image: url(UI/brown_background.jpg);
+				background-attachment: scroll;
+				border: 2px solid gray;
+				border-radius: 10px;
+			""")
+		grid = QGridLayout(self)
+		castle_image = QPushButton()
+		castle_image.setStyleSheet('border-image: url(UI/castle_inside); min-height: 200px;')
+		grid.addWidget(castle_image)
+		player_label = QLabel(player)
+		grid.addWidget(player_label)
+		self.setLayout(grid)
+
+
 class Board(QWidget):
 	def __init__(self, parent):
 		super(Board, self).__init__(parent)
@@ -18,12 +36,14 @@ class Board(QWidget):
 		self.set_hero(0, 0, 1)
 		self.set_hero(height - 1, width - 1, 2)
 
-		self.board.addWidget(QTextEdit("Gracz 1"), 1, 1, height - 2, width / 2 - 1)
+		label1 = PlayerInfo(self, 'Gracz 1')
+		self.board.addWidget(label1, 1, 1, height - 2, width / 2 - 1)
+
 		place = width / 2
 		if width % 2 != 0:
 			place = width / 2 + 1
-		self.board.addWidget(QTextEdit("Gracz 2"), 1, place, height - 2, width / 2 - 1)
-
+		label2 = PlayerInfo(self, 'Gracz 2')
+		self.board.addWidget(label2, 1, place, height - 2, width / 2 - 1)
 
 		self.setLayout(self.board)
 		self.show()
@@ -31,7 +51,7 @@ class Board(QWidget):
 
 	def generate_board(self, width, height):
 		self.buttons = [[0 for x in range(width)] for y in range(height)]
-		self.board = QGridLayout()
+		self.board = QGridLayout(self)
 		for i in range(height):
 			for j in range(width):
 				self.buttons[i][j] = QPushButton()
