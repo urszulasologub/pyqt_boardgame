@@ -6,6 +6,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
 from player import *
 from dice import DiceRoll
+from random import randrange
 
 
 
@@ -75,11 +76,17 @@ class Board(QWidget):
 		self.set_button_stylesheet(self.buttons[0], 'objects/castle1.png')
 		self.set_button_stylesheet(self.buttons[int(k / 2)], 'objects/castle1.png')
 
-		self.generate_special_tiles(width, height)
+		self.tiles_amount = k
+		self.generate_special_tiles()
 
 
-	def generate_special_tiles(self, width, height):
-		print(self.buttons)
+	def generate_special_tiles(self):
+		self.special_tiles = []
+		for i in range(self.tiles_amount):
+			if randrange(3) == 1: 
+				self.special_tiles.append(self.buttons[i])
+				self.set_button_stylesheet(self.buttons[i], 'objects/treasure.png')
+
 
 
 	def set_hero(self, x1, y1, which_one):

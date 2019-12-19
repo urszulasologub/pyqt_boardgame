@@ -19,6 +19,7 @@ class DiceRoll(QDialog):
 				color: white;
 				font-size: 18pt;
 				font: Arial;
+				min-height: 15px;
 			""")
 
 		grid = QGridLayout(self)
