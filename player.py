@@ -4,25 +4,29 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
+from dice import DiceRoll
 
 class PlayerInfo(QWidget):
 	def __init__(self, parent, player):
 		super(PlayerInfo, self).__init__(parent)
+		color = 'darkblue'
+		if player == 'Gracz 1':
+			color = 'darkred'
 		self.setStyleSheet("""
 				background-image: url(UI/brown_background.jpg);
 				background-attachment: scroll;
-				border: 2px outset gray;
+				border: 2px outset %s;
 				border-radius: 10px;
 				color: white;
 				font-size: 18pt;
 				font: Arial;
-			""")
+			""" % color)
 		self.grid = QGridLayout(self)
 		castle_image = QPushButton()
 		castle_image.setStyleSheet('border-image: url(UI/castle_inside); min-height: 200px; ')
 		self.grid.addWidget(castle_image, 0, 0)
 
-		self.labels = [QLabel(player), QLabel('Poziom zamku: 1'), QLabel('Złoto: 0')]
+		self.labels = [QLabel(player), QLabel('Poziom zamku: 1'), QLabel('Złoto: 0'), QLabel('Wyrzucono oczek: 3')]
 
 		i = 1
 		for label in self.labels:
@@ -30,7 +34,6 @@ class PlayerInfo(QWidget):
 			i += 1
 
 		self.setLayout(self.grid)
-		#self.update_castle_level(2)
 		self.update_gold_amount(5000)
 
 
@@ -44,6 +47,12 @@ class PlayerInfo(QWidget):
 		text = 'Złoto: ' + str(amount)
 		self.labels[2] = QLabel(text)
 		self.grid.addWidget(self.labels[2], 3, 0)
+
+
+	def update_dice_amount(self, amount):
+		text = 'Wyrzucono oczek: ' + str(amount)
+		self.labels[3] = QLabel(text)
+		self.grid.addWidget(self.labels[3], 4, 0)
 
 
 
@@ -71,3 +80,5 @@ class PlayerActions(QWidget):
 			self.grid.addWidget(self.buttons[i], i, 0)
 			
 		self.setLayout(self.grid)
+
+

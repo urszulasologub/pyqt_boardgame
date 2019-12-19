@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
 from player import *
+from dice import DiceRoll
 
 
 
@@ -34,6 +35,8 @@ class Board(QWidget):
 		
 		self.setLayout(self.board)
 		self.show()
+		dice = DiceRoll(self)
+		dice.roll_dice()
 
 
 	def generate_board(self, width, height):
@@ -88,13 +91,15 @@ class mainWindow(QMainWindow):
 		self.board = Board(self)
 		self.setCentralWidget(self.board)
 		self.setWindowTitle("Board game")
-		self.showFullScreen()
+		#self.showFullScreen()
+		self.move(0, 0)
 
 
 		self.setStyleSheet("""
 				background-image: url(./UI/map_visual.png);
 				background-attachment: scroll;
 			""")
+
 
 if __name__ == "__main__":
 	app = QApplication(sys.argv)
