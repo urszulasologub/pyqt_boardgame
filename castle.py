@@ -15,13 +15,14 @@ class Castle(QDialog):
 				border: 2px outset gray;
 				border-radius: 10px;
 				color: white;
-				font-size: 18pt;
+				font-size: 14pt;
 				font: Arial;
+				min-height: 20px;
 			""")
 
 		grid = QGridLayout(self)
 		
-		units = QLabel('Jednostki poziomu 1: 0\nJednostki poziomu 2: 0\nJednostki poziomu 3: 0\nJednostki poziomu 4: 0\nJednostki poziomu 5: 0\n')
+		units = QLabel('Dostępne:\nJednostki poziomu 1: 0\nJednostki poziomu 2: 0\nJednostki poziomu 3: 0\nJednostki poziomu 4: 0\nJednostki poziomu 5: 0\n')
 		grid.addWidget(units)
 		prices = ['50', '100', '500', '1000', '2500']
 		available = [True, True, False, False, False]
@@ -33,4 +34,4 @@ class Castle(QDialog):
 
 	def show_castle(self):
 		dialog = Castle(self)
-		dialog.show()
+		dialog.exec_()

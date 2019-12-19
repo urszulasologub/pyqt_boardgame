@@ -40,30 +40,46 @@ class Board(QWidget):
 
 
 	def generate_board(self, width, height):
-		self.buttons = [[0 for x in range(width)] for y in range(height)]
 		self.board = QGridLayout(self)
-		for i in range(height):
-			for j in range(width):
-				self.buttons[i][j] = QPushButton()
+		self.buttons = []
+		k = 0
 
-		for j in range(width):
-			self.set_button_stylesheet(self.buttons[0][j], 'objects/arrow_green_right.png')
-			self.set_button_stylesheet(self.buttons[height - 1][j], 'objects/arrow_green_left.png')
-			self.board.addWidget(self.buttons[0][j], 0, j)
-			self.board.addWidget(self.buttons[height - 1][j], height - 1, j)
+		for j in range(width - 1):
+			self.buttons.append(QPushButton())
+			self.set_button_stylesheet(self.buttons[k], 'objects/arrow_green_right.png')
+			self.board.addWidget(self.buttons[k], 0, j)
+			self.buttons[k].setText(str(k))
+			k += 1
 
-		for i in range(height):
-			self.set_button_stylesheet(self.buttons[i][0], 'objects/arrow_green_up.png')
-			self.set_button_stylesheet(self.buttons[i][width - 1], 'objects/arrow_green_down.png')
-			self.board.addWidget(self.buttons[i][0], i, 0)
-			self.board.addWidget(self.buttons[i][width - 1], i, width - 1)
+		for i in range(height - 1):
+			self.buttons.append(QPushButton())
+			self.set_button_stylesheet(self.buttons[k], 'objects/arrow_green_down.png')
+			self.board.addWidget(self.buttons[k], i, width - 1)
+			self.buttons[k].setText(str(k))
+			k += 1
 
-		self.set_button_stylesheet(self.buttons[0][0], 'objects/castle1.png')
-		self.set_button_stylesheet(self.buttons[height - 1][width - 1], 'objects/castle1.png')
-		
-		for i in range(height - 2):
-			for j in range(width - 2):
-				self.buttons[i + 1][j + 1].deleteLater()
+		for j in range(width - 1):
+			self.buttons.append(QPushButton())
+			self.set_button_stylesheet(self.buttons[k], 'objects/arrow_green_left.png')
+			self.board.addWidget(self.buttons[k], height - 1, width - j - 1)
+			self.buttons[k].setText(str(k))
+			k += 1
+
+		for i in range(height - 1):
+			self.buttons.append(QPushButton())
+			self.set_button_stylesheet(self.buttons[k], 'objects/arrow_green_up.png')
+			self.board.addWidget(self.buttons[k], height - i - 1, 0)
+			self.buttons[k].setText(str(k))
+			k += 1
+
+		self.set_button_stylesheet(self.buttons[0], 'objects/castle1.png')
+		self.set_button_stylesheet(self.buttons[int(k / 2)], 'objects/castle1.png')
+
+		self.generate_special_tiles(width, height)
+
+
+	def generate_special_tiles(self, width, height):
+		print(self.buttons)
 
 
 	def set_hero(self, x1, y1, which_one):

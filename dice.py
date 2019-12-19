@@ -52,4 +52,4 @@ class DiceRoll(QDialog):
 
 	def roll_dice(self):
 		dialog = DiceRoll(self)
-		dialog.show()
+		dialog.exec_()
