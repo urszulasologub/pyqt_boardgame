@@ -21,29 +21,28 @@ class DiceRoll(QDialog):
 				font: Arial;
 			""")
 
-		dice = randrange(1, 6)
-		text = 'Wyrzucono %s oczek' % str(dice)
-		message = QLabel(text)
-
-		buttons = QHBoxLayout()
-		ok = QPushButton('OK')
-		ok.clicked.connect(self.okButton)
+		grid = QGridLayout(self)
 
 		image = QLabel()
 		dice_gif = QMovie('UI/dice.gif')
+		dice_gif.setScaledSize(QSize(100, 150))
 		image.setMovie(dice_gif)
+		grid.addWidget(image)
+
+		dice = randrange(1, 6)
+		text = 'Wyrzucono %s oczek' % str(dice)
+		message = QLabel(text)
+		grid.addWidget(message)
+
+		ok = QPushButton('OK')
+		ok.clicked.connect(self.okButton)
+		grid.addWidget(ok)
 
 		sound = QSound('audio/dice.wav')
 		sound.play()
 
-		layout = QHBoxLayout(self)
-		layout.addWidget(image)
-		layout.addWidget(message)
-		layout.addWidget(ok)
-
+		self.setLayout(grid)
 		dice_gif.start()
-
-		self.setLayout(layout)
 
 
 
