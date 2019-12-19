@@ -82,6 +82,8 @@ class PlayerActions(QWidget):
 			self.buttons.append(QPushButton(self.labels[i]))
 			self.grid.addWidget(self.buttons[i], i, 0)
 			
+		dice = DiceRoll(self)	
+		self.buttons[1].clicked.connect(lambda: dice.roll_dice())
 		self.setLayout(self.grid)
 
 
