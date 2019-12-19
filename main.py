@@ -17,8 +17,10 @@ class Board(QWidget):
 		max_tiles = width * 2 + height * 2 - 4
 		self.special_tiles = int(max_tiles / 4)
 		self.generate_board(width, height)
-		self.set_hero(0, 0, 1)
-		self.set_hero(height - 1, width - 1, 2)
+		self.player1 = QPushButton()
+		self.player2 = QPushButton()
+		self.set_hero(0, 0, self.player1)
+		self.set_hero(height - 1, width - 1, self.player2)
 
 		label1 = PlayerInfo(self, 'Gracz 1')
 		self.board.addWidget(label1, 1, 1, height - 2, width / 2 - 1)
@@ -61,15 +63,12 @@ class Board(QWidget):
 				self.buttons[i + 1][j + 1].deleteLater()
 
 
-	def set_hero(self, x1, y1, which_one=1):
-		#icon1  = QPixmap('sprites/hero1.png')
-		#self.buttons[x1][y1].setIcon(QIcon(icon1))
-		if which_one == 1:
-			self.set_button_stylesheet(self.buttons[x1][y1], 'sprites/castle1_hero1.png')
-			self.board.addWidget(self.buttons[x1][y1], x1, y1)
+	def set_hero(self, x1, y1, which_one):
+		if which_one == self.player1:
+			self.set_button_stylesheet(which_one, 'sprites/hero1_p.png')
 		else:
-			self.set_button_stylesheet(self.buttons[x1][y1], 'sprites/castle1_hero2.png')
-			self.board.addWidget(self.buttons[x1][y1], x1, y1)
+			self.set_button_stylesheet(which_one, 'sprites/hero2_p.png')
+		self.board.addWidget(which_one, x1, y1)
 
 		
 	def set_button_stylesheet(self, button, image):
