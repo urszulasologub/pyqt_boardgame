@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
 from dice import DiceRoll
+from castle import Castle
 
 class PlayerInfo(QWidget):
 	def __init__(self, parent, player):
@@ -24,9 +25,12 @@ class PlayerInfo(QWidget):
 		self.grid = QGridLayout(self)
 		castle_image = QPushButton()
 		castle_image.setStyleSheet('border-image: url(UI/castle_inside); min-height: 200px; ')
+		castle = Castle(self)
+		castle_image.clicked.connect(lambda: castle.show_castle())
+
 		self.grid.addWidget(castle_image, 0, 0)
 
-		self.labels = [QLabel(player), QLabel('Poziom zamku: 1'), QLabel('Złoto: 0'), QLabel('Wyrzucono oczek: 3')]
+		self.labels = [QLabel(player), QLabel('Poziom zamku: 1'), QLabel('Złoto: 0'), QLabel('Wyrzucono oczek: 3'), QLabel('Tydzień: 1, Dzień: 1')]
 
 		i = 1
 		for label in self.labels:
@@ -53,7 +57,6 @@ class PlayerInfo(QWidget):
 		text = 'Wyrzucono oczek: ' + str(amount)
 		self.labels[3] = QLabel(text)
 		self.grid.addWidget(self.labels[3], 4, 0)
-
 
 
 class PlayerActions(QWidget):
