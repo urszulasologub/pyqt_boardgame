@@ -7,8 +7,13 @@ from PyQt5.QtPrintSupport import *
 from dice import DiceRoll
 from castle import Castle
 
+
 class PlayerInfo(QWidget):
 	def __init__(self, parent, player):
+		self.castle_level = 1
+		self.gold = 0
+		self.dice = 3#DiceRoll(self).roll_dice()
+
 		super(PlayerInfo, self).__init__(parent)
 		color = 'darkblue'
 		if player == 'Gracz 1':
@@ -30,7 +35,7 @@ class PlayerInfo(QWidget):
 
 		self.grid.addWidget(castle_image, 0, 0)
 
-		self.labels = [QLabel(player), QLabel('Poziom zamku: 1'), QLabel('Złoto: 0'), QLabel('Wyrzucono oczek: 3'), QLabel('Tydzień: 1, Dzień: 1')]
+		self.labels = [QLabel(player), QLabel('Poziom zamku: %d' % self.castle_level), QLabel('Złoto: 0'), QLabel('Wyrzucono oczek: %d' % self.dice), QLabel('Tydzień: %d, Dzień: %d' % (self.parent().week, self.parent().day))]
 
 		i = 1
 		for label in self.labels:
@@ -40,27 +45,26 @@ class PlayerInfo(QWidget):
 		self.setLayout(self.grid)
 		self.update_gold_amount(5000)
 
-
 	def update_castle_level(self, level):
+		self.castle_level = level
 		text = 'Poziom zamku: ' + str(level)
 		self.labels[1] = QLabel(text)
 		self.grid.addWidget(self.labels[1], 2, 0)
-				
-	
+
 	def update_gold_amount(self, amount):
+		self.gold = amount
 		text = 'Złoto: ' + str(amount)
 		self.labels[2] = QLabel(text)
 		self.grid.addWidget(self.labels[2], 3, 0)
-
 
 	def update_dice_amount(self, amount):
 		text = 'Wyrzucono oczek: ' + str(amount)
 		self.labels[3] = QLabel(text)
 		self.grid.addWidget(self.labels[3], 4, 0)
 
-
+#akcje zawsze są te same, więc nie potrzeba podawać gracza
 class PlayerActions(QWidget):
-	def __init__(self, parent, player):
+	def __init__(self, parent):
 		super(PlayerActions, self).__init__(parent)
 		self.setStyleSheet("""
 				background-image: url(UI/brown_background.jpg);
@@ -73,17 +77,22 @@ class PlayerActions(QWidget):
 				min-height: 70px;
 			""")
 
-
 		self.grid = QGridLayout(self)
 		self.labels = ['Zobacz druzynę', 'Zakończ kolejkę', 'Atakuj', 'Bohater1', 'Bohater2', 'Bohater3']
 		self.buttons = []
 
 		for i in range(len(self.labels)):
 			self.buttons.append(QPushButton(self.labels[i]))
+			if self.labels[i] is "Zakończ kolejkę":#jak doda się kolejne funkconalności to się to poprawi xd
+				self.buttons[i].clicked.connect(self.change_turn)
 			self.grid.addWidget(self.buttons[i], i, 0)
-			
-		dice = DiceRoll(self)	
+
+		dice = DiceRoll(self)
 		self.buttons[1].clicked.connect(lambda: dice.roll_dice())
 		self.setLayout(self.grid)
+
+	def change_turn(self):
+		self.parent().parent().turn += 1
+		self.parent().parent().show_info()
 
 

@@ -9,36 +9,48 @@ from dice import DiceRoll
 from random import randrange
 
 
-
 class Board(QWidget):
 	def __init__(self, parent):
 		super(Board, self).__init__(parent)
 
-		width = 15
-		height = 10
-		max_tiles = width * 2 + height * 2 - 4
-		self.special_tiles = int(max_tiles / 4)
-		self.generate_board(width, height)
-		self.player1 = QPushButton()
-		self.player2 = QPushButton()
-		self.set_hero(0, 0, self.player1)
-		self.set_hero(height - 1, width - 1, self.player2)
+		self.week = self.parent().week
+		self.day = self.parent().day
 
-		label1 = PlayerInfo(self, 'Gracz 1')
-		self.board.addWidget(label1, 1, 1, height - 2, width / 2 - 1)
+		self.width = 15
+		self.height = 10
+		# self.max_tiles = self.width * 2 + self.height * 2 - 4
+		# self.parent().special_tiles = int(self.max_tiles / 4)
+		self.generate_board(self.width, self.height)
+
+		self.player1 = PlayerInfo(self, 'Gracz 1')
+		self.player2 = PlayerInfo(self, 'Gracz 2')
+
+		self.player1_button = QPushButton()
+		self.player2_button = QPushButton()
+		self.set_hero(0, 0, self.player1_button)
+		self.set_hero(self.height - 1, self.width - 1, self.player2_button)
+
+		if self.parent().turn % 2 is 0:
+			self.player_info = self.player2
+			self.parent().day += 1
+			if self.parent().day % 7 is 0:
+				self.parent().week += 1
+		else:
+			self.player_info = self.player1
+
+		self.board.addWidget(self.player_info, 1, 1, self.height - 2, self.width / 2 - 1)
+
 		#only one player, because this widget will be changed depending on whose turn it is
 
-		act = PlayerActions(self, 'Gracz 1')
-		place = width / 2
-		if width % 2 != 0:
-			place = width / 2 + 1
-		self.board.addWidget(act, 1, place, height - 2, width / 2 - 1)
+		act = PlayerActions(self)
+		place = self.width / 2
+		if self.width % 2 != 0:
+			place = self.width / 2 + 1
+		self.board.addWidget(act, 1, place, self.height - 2, self.width / 2 - 1)
 		
 		self.setLayout(self.board)
 		self.show()
-		dice = DiceRoll(self)
-		dice.roll_dice()
-
+		#tu był pierwszy dice
 
 	def generate_board(self, width, height):
 		self.board = QGridLayout(self)
@@ -77,26 +89,30 @@ class Board(QWidget):
 		self.set_button_stylesheet(self.buttons[int(k / 2)], 'objects/castle1.png')
 
 		self.tiles_amount = k
-		self.generate_special_tiles()
 
+		if self.parent().turn is 1:
+			self.generate_special_tiles()
 
-	def generate_special_tiles(self):
-		self.special_tiles = []
-		for i in range(self.tiles_amount):
-			if randrange(3) == 1: 
-				self.special_tiles.append(self.buttons[i])
+		if self.day % 7 is 0 and self.parent().turn % 2 is 1:
+			self.parent().special_tiles.clear()
+			self.generate_special_tiles()
+
+		for i in range(self.tiles_amount): #shows special tiles every turn
+			if i in self.parent().special_tiles:
 				self.set_button_stylesheet(self.buttons[i], 'objects/treasure.png')
 
-
+	def generate_special_tiles(self):
+		for i in range(self.tiles_amount):
+			if randrange(3) == 1:
+				self.parent().special_tiles.append(i)
 
 	def set_hero(self, x1, y1, which_one):
-		if which_one == self.player1:
+		if which_one == self.player1_button:
 			self.set_button_stylesheet(which_one, 'sprites/hero1_p.png')
 		else:
 			self.set_button_stylesheet(which_one, 'sprites/hero2_p.png')
 		self.board.addWidget(which_one, x1, y1)
 
-		
 	def set_button_stylesheet(self, button, image):
 		str = 'height: 60px; width: 60px; background-image: url(None); border-image: url("'
 		str += image
@@ -105,23 +121,29 @@ class Board(QWidget):
 		return button
 		
 
-
 class mainWindow(QMainWindow):
 
 	def __init__(self, parent=None):
 		super(mainWindow, self).__init__(parent)
 
-		self.board = Board(self)
-		self.setCentralWidget(self.board)
+		self.week = 1
+		self.day = 1
+		self.turn = 1
+
+		self.special_tiles = [] #po to by się nie aktualizowało za wcześnie
+
+		self.show_info()
 		self.setWindowTitle("Board game")
 		#self.showFullScreen()
 		self.move(0, 0)
-
 
 		self.setStyleSheet("""
 				background-image: url(./UI/map_visual.png);
 				background-attachment: scroll;
 			""")
+
+	def show_info(self):
+		self.setCentralWidget(Board(self))
 
 
 if __name__ == "__main__":
