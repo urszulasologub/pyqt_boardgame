@@ -31,7 +31,7 @@ class DiceRoll(QDialog):
 		image.setMovie(dice_gif)
 		grid.addWidget(image)
 
-		self.dice = randrange(1, 6)
+		self.dice = randrange(1, 7) # inaczej nie losuje 6
 		text = 'Wyrzucono %s oczek' % str(self.dice)
 		message = QLabel(text)
 		grid.addWidget(message)
@@ -51,5 +51,4 @@ class DiceRoll(QDialog):
 		self.close()
 
 	def roll_dice(self):
-		dialog = DiceRoll(self)
-		dialog.exec_()
+		self.exec_()
