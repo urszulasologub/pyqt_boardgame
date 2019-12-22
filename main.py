@@ -142,9 +142,11 @@ class Board(QWidget):
 				self.set_button_stylesheet(self.buttons[i], 'objects/treasure.png')
 
 	def generate_special_tiles(self):
-		for i in range(self.tiles_amount):
-			if randrange(3) == 1:
-				self.parent().special_tiles.append(i)
+		self.special_tiles = []
+		for i in range(1, self.tiles_amount):
+			if randrange(3) == 1 and i is not int(self.tiles_amount / 2):
+				self.special_tiles.append(self.buttons[i])
+				self.set_button_stylesheet(self.buttons[i], 'objects/treasure.png')
 
 	def set_hero(self, x, y, which_one):
 		if which_one == self.player1_button:
