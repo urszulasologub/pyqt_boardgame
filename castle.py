@@ -33,6 +33,7 @@ class Castle(QDialog):
 				grid.addWidget(QPushButton('Kup jednostkę poziomu %s za %s złota' % (str(i + 1), str(prices[i]))), i + 2, 0)
 
 
+
 	def show_castle(self):
 		dialog = Castle(self)
 		dialog.exec_()
