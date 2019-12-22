@@ -10,6 +10,7 @@ class DiceRoll(QDialog):
 	def __init__(self, parent):
 		super(DiceRoll, self).__init__(parent)
 		self._dialog = QDialog(self)
+		self.setWindowTitle("Rzut kością")
 
 		self.setStyleSheet("""
 				background-image: url(UI/brown_background.jpg);
@@ -30,8 +31,8 @@ class DiceRoll(QDialog):
 		image.setMovie(dice_gif)
 		grid.addWidget(image)
 
-		dice = randrange(1, 6)
-		text = 'Wyrzucono %s oczek' % str(dice)
+		self.dice = randrange(1, 7) # inaczej nie losuje 6
+		text = 'Wyrzucono %s oczek' % str(self.dice)
 		message = QLabel(text)
 		grid.addWidget(message)
 
@@ -46,11 +47,8 @@ class DiceRoll(QDialog):
 		dice_gif.start()
 
 
-
 	def okButton(self):
 		self.close()
 
-
 	def roll_dice(self):
-		dialog = DiceRoll(self)
-		dialog.exec_()
+		self.exec_()

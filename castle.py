@@ -8,6 +8,7 @@ class Castle(QDialog):
 	def __init__(self, parent):
 		super(Castle, self).__init__(parent)
 		self._dialog = QDialog(self)
+		self.setWindowTitle("Zamek")
 
 		self.setStyleSheet("""
 				background-image: url(UI/brown_background.jpg);
@@ -31,8 +32,6 @@ class Castle(QDialog):
 		for i in range(len(prices)):
 			if available[i]:
 				grid.addWidget(QPushButton('Kup jednostkę poziomu %s za %s złota' % (str(i + 1), str(prices[i]))), i + 2, 0)
-
-
 
 	def show_castle(self):
 		dialog = Castle(self)

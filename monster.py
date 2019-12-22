@@ -7,13 +7,8 @@ class Unit():
 		self.castle = castle
 		self.attack = attack
 		self.defensive = defensive
-		
+
 
 class Pixie(Unit):
 	def __init__(self):
-		
-
-		
-
-
 
