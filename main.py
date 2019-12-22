@@ -82,8 +82,8 @@ class Board(QWidget):
 
 	def generate_special_tiles(self):
 		self.special_tiles = []
-		for i in range(self.tiles_amount):
-			if randrange(3) == 1: 
+		for i in range(1, self.tiles_amount):
+			if randrange(3) == 1 and i is not int(self.tiles_amount / 2):
 				self.special_tiles.append(self.buttons[i])
 				self.set_button_stylesheet(self.buttons[i], 'objects/treasure.png')
 
