@@ -12,7 +12,7 @@ from random import randrange
 class Board(QWidget):
 	def __init__(self, parent):
 		super(Board, self).__init__(parent)
-
+		self.buttons = []
 		# self.max_tiles = self.width * 2 + self.height * 2 - 4
 		# self.parent().special_tiles = int(self.max_tiles / 4)
 		self.board = self.parent().board
@@ -94,7 +94,8 @@ class Board(QWidget):
 
 
 	def generate_board(self, width, height):
-		self.buttons = []
+		for button in self.buttons:
+			button.deleteLater()
 		k = 0
 
 		for j in range(width - 1):
@@ -140,6 +141,7 @@ class Board(QWidget):
 		for i in range(self.tiles_amount): #shows special tiles every turn
 			if i in self.parent().special_tiles:
 				self.set_button_stylesheet(self.buttons[i], 'objects/treasure.png')
+
 
 	def generate_special_tiles(self):
 		self.special_tiles = []
