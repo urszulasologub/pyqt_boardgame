@@ -12,7 +12,7 @@ class PlayerInfo(QWidget):
 	def __init__(self, parent, player):
 		self.castle_level = 1
 		self.gold = 0
-		self.dice = 3#DiceRoll(self).roll_dice()
+		self.dice = 0
 		self.h1pos_x = 0
 		self.h1pos_y = 0
 		self.h2pos_x = 0
@@ -23,6 +23,52 @@ class PlayerInfo(QWidget):
 		self.avaliable_heroes = [1]
 		self.can_move = False
 
+		self.h1units = {
+			"level_1": 0,
+			"level_2": 0,
+			"level_3": 0,
+			"level_4": 0,
+			"level_5": 0
+		}
+
+		self.h2units = {
+			"level_1": 0,
+			"level_2": 0,
+			"level_3": 0,
+			"level_4": 0,
+			"level_5": 0
+		}
+
+		self.h3units = {
+			"level_1": 0,
+			"level_2": 0,
+			"level_3": 0,
+			"level_4": 0,
+			"level_5": 0
+		}
+
+		self.in_castle_units = {
+			"level_1": 10, #do testów losowe wartości
+			"level_2": 4,
+			"level_3": 1000,
+			"level_4": 0,
+			"level_5": 0
+		}
+
+		self.unit_atk = {
+			"level_1": 0,
+			"level_2": 0,
+			"level_3": 0,
+			"level_4": 0,
+			"level_5": 0
+		}
+		self.unit_def = {
+			"level_1": 0,
+			"level_2": 0,
+			"level_3": 0,
+			"level_4": 0,
+			"level_5": 0
+		}
 
 		super(PlayerInfo, self).__init__(parent)
 		color = 'darkblue'
@@ -40,8 +86,7 @@ class PlayerInfo(QWidget):
 		self.grid = QGridLayout(self)
 		castle_image = QPushButton()
 		castle_image.setStyleSheet('border-image: url(UI/castle_inside); min-height: 200px; ')
-		castle = Castle(self)
-		castle_image.clicked.connect(lambda: castle.show_castle())
+		castle_image.clicked.connect(self.show_castle)
 
 		self.grid.addWidget(castle_image, 0, 0)
 
@@ -55,6 +100,10 @@ class PlayerInfo(QWidget):
 		self.setLayout(self.grid)
 		self.update_gold_amount(5000)
 		#self.update_week_day()
+
+	def show_castle(self):
+		castle = Castle(self)
+		castle.exec_()
 
 	def update_castle_level(self, level):
 		self.castle_level = level
