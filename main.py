@@ -13,21 +13,23 @@ class Board(QWidget):
 	def __init__(self, parent):
 		super(Board, self).__init__(parent)
 
-		self.width = 15
-		self.height = 10
 		# self.max_tiles = self.width * 2 + self.height * 2 - 4
 		# self.parent().special_tiles = int(self.max_tiles / 4)
 		self.board = self.parent().board
 
-		self.generate_board(self.width, self.height)
+		self.generate_board(self.parent().width, self.parent().height)
 
 		self.player1_button = QPushButton()
 		self.player2_button = QPushButton()
 
 		if self.parent().turn is 1:
 		#wszystkie rzeczy, kóre muszą się zadziać w pierwszej turze
-			self.parent().player2.pos_x = self.width - 1
-			self.parent().player2.pos_y = self.height - 1
+			self.parent().player2.h1pos_x = self.parent().width - 1
+			self.parent().player2.h1pos_y = self.parent().height - 1
+			self.parent().player2.h2pos_x = self.parent().width - 1
+			self.parent().player2.h2pos_y = self.parent().height - 1
+			self.parent().player2.h3pos_x = self.parent().width - 1
+			self.parent().player2.h3pos_y = self.parent().height - 1
 		#else:
 		#	self.unset_heroes()
 
@@ -39,44 +41,57 @@ class Board(QWidget):
 		else:
 			self.player_info = self.parent().player1
 
-		print("=====")
-		for i in range(self.player_info.dice): #  pętli, żeby nie wyszło za przedział
-			if self.player_info.pos_x in range(self.width-1) and self.player_info.pos_y is 0:
-				print("lewo")
-				self.player_info.pos_x += 1
-			elif self.player_info.pos_x is 0 and self.player_info.pos_y in range(self.width - 1):
-				print("gora")
-				self.player_info.pos_y -= 1
-			elif self.player_info.pos_x in range(self.width) and self.player_info.pos_y is self.height-1:
-				print("prawo")
-				self.player_info.pos_x -= 1
-				if self.player_info.pos_x < 0:
-					self.player_info.pos_x = 0
-			elif self.player_info.pos_x is self.width-1 and self.player_info.pos_y in range(self.height):
-				print("dol")
-				self.player_info.pos_y += 1
+		#self.move_hero(self.player_info, 1)
+		self.show_heroes()
 
 
-		self.x1, self.y1 = self.parent().player1.pos_x, self.parent().player1.pos_y
-		self.x2, self.y2 = self.parent().player2.pos_x, self.parent().player2.pos_y
+		#self.player_info.update_week_day()
+		self.board.addWidget(self.player_info, 1, 1, self.parent().height - 2, self.parent().width / 2 - 1)
+		#only one player, because this widget will be changed depending on whose turn it is
+
+		act = PlayerActions(self)
+		place = self.parent().width / 2
+		if self.parent().width % 2 != 0:
+			place = self.parent().width / 2 + 1
+
+		self.board.addWidget(act, 1, place, self.parent().height - 2, self.parent().width / 2 - 1)
+
+		self.setLayout(self.board)
+		self.show()
+
+	def show_heroes(self): # na razie pokazuje tylko odpowiadających bohaterów
+		hero = self.player_info.hero
+		if hero is 1:
+			self.x1, self.y1 = self.parent().player1.h1pos_x, self.parent().player1.h1pos_y
+			self.x2, self.y2 = self.parent().player2.h1pos_x, self.parent().player2.h1pos_y
+		elif hero is 2:
+			self.x1, self.y1 = self.parent().player1.h2pos_x, self.parent().player1.h2pos_y
+			self.x2, self.y2 = self.parent().player2.h2pos_x, self.parent().player2.h2pos_y
+		else:
+			self.x1, self.y1 = self.parent().player1.h3pos_x, self.parent().player1.h3pos_y
+			self.x2, self.y2 = self.parent().player2.h3pos_x, self.parent().player2.h3pos_y
+		# jakbyśmy chcialy pokazywać tylko po jednym
+		'''if self.player_info.player is "Gracz 1":
+			self.x2, self.y2 = self.parent().player2.h1pos_x, self.parent().player2.h1pos_y
+			if hero is 1:
+				self.x1, self.y1 = self.parent().player1.h1pos_x, self.parent().player1.h1pos_y
+			elif hero is 2:
+				self.x1, self.y1 = self.parent().player1.h2pos_x, self.parent().player1.h2pos_y
+			else:
+				self.x1, self.y1 = self.parent().player1.h3pos_x, self.parent().player1.h3pos_y
+		else:
+			self.x1, self.y1 = self.parent().player1.h1pos_x, self.parent().player1.h1pos_y
+			if hero is 1:
+				self.x2, self.y2 = self.parent().player2.h1pos_x, self.parent().player2.h1pos_y
+			elif hero is 2:
+				self.x2, self.y2 = self.parent().player2.h2pos_x, self.parent().player2.h2pos_y
+			else:
+				self.x2, self.y2 = self.parent().player2.h3pos_x, self.parent().player2.h3pos_y'''
 
 		self.set_hero(self.x1, self.y1, self.player1_button)
 		self.set_hero(self.x2, self.y2, self.player2_button)
 
 
-		#self.player_info.update_week_day()
-		self.board.addWidget(self.player_info, 1, 1, self.height - 2, self.width / 2 - 1)
-		#only one player, because this widget will be changed depending on whose turn it is
-
-		act = PlayerActions(self)
-		place = self.width / 2
-		if self.width % 2 != 0:
-			place = self.width / 2 + 1
-
-		self.board.addWidget(act, 1, place, self.height - 2, self.width / 2 - 1)
-		
-		self.setLayout(self.board)
-		self.show()
 
 	def generate_board(self, width, height):
 		self.buttons = []
@@ -159,6 +174,9 @@ class mainWindow(QMainWindow):
 		self.day = 1
 		self.turn = 1
 
+		self.width = 15
+		self.height = 10
+
 		self.board = QGridLayout(self) # nie wiem czemu ale musi być tu inaczej jak 2 raz musi wyświetlić pierwszego gracza to się psuje ;(
 		self.player1 = PlayerInfo(self, 'Gracz 1')
 		self.player2 = PlayerInfo(self, 'Gracz 2')
@@ -187,6 +205,10 @@ class mainWindow(QMainWindow):
 			player = self.player1
 		player.update_dice_amount(dice.dice)
 		player.update_week_day(self.week, self.day)
+		#print("przed %d"%player.hero)
+		player.can_move = True
+		player.hero = 1 #przywrócić defaultową wartość dla kolejnego gracza
+		#print("po %d" % player.hero)
 		dice.exec_()
 
 
