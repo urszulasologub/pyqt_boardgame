@@ -19,6 +19,14 @@ class Board(QWidget):
 
 		self.player1_button = QPushButton()
 		self.player2_button = QPushButton()
+		self.player1_button2 = QPushButton()  # jeśli nie są od razu, to przy zakupie przestawiało pierwszy pionek na pozycję startową
+		self.player2_button2 = QPushButton()
+		self.player1_button3 = QPushButton()
+		self.player2_button3 = QPushButton()
+		self.player1_button2.hide()  # ukrywa dopóki nie zostaną kupione
+		self.player2_button2.hide()
+		self.player1_button3.hide()
+		self.player2_button3.hide()
 
 		if self.parent().turn is 1:
 		#wszystkie rzeczy, kóre muszą się zadziać w pierwszej turze
@@ -41,37 +49,27 @@ class Board(QWidget):
 		self.setLayout(self.board)
 		self.show()
 
-	def show_heroes(self): # na razie pokazuje tylko odpowiadających bohaterów
-		hero = self.player_info.hero
-		if hero is 1:
-			self.x1, self.y1 = self.parent().player1.h1pos_x, self.parent().player1.h1pos_y
-			self.x2, self.y2 = self.parent().player2.h1pos_x, self.parent().player2.h1pos_y
-		elif hero is 2:
-			self.x1, self.y1 = self.parent().player1.h2pos_x, self.parent().player1.h2pos_y
-			self.x2, self.y2 = self.parent().player2.h2pos_x, self.parent().player2.h2pos_y
-		else:
-			self.x1, self.y1 = self.parent().player1.h3pos_x, self.parent().player1.h3pos_y
-			self.x2, self.y2 = self.parent().player2.h3pos_x, self.parent().player2.h3pos_y
-		# jakbyśmy chcialy pokazywać tylko po jednym
-		'''if self.player_info.player is "Gracz 1":
-			self.x2, self.y2 = self.parent().player2.h1pos_x, self.parent().player2.h1pos_y
-			if hero is 1:
-				self.x1, self.y1 = self.parent().player1.h1pos_x, self.parent().player1.h1pos_y
-			elif hero is 2:
-				self.x1, self.y1 = self.parent().player1.h2pos_x, self.parent().player1.h2pos_y
-			else:
-				self.x1, self.y1 = self.parent().player1.h3pos_x, self.parent().player1.h3pos_y
-		else:
-			self.x1, self.y1 = self.parent().player1.h1pos_x, self.parent().player1.h1pos_y
-			if hero is 1:
-				self.x2, self.y2 = self.parent().player2.h1pos_x, self.parent().player2.h1pos_y
-			elif hero is 2:
-				self.x2, self.y2 = self.parent().player2.h2pos_x, self.parent().player2.h2pos_y
-			else:
-				self.x2, self.y2 = self.parent().player2.h3pos_x, self.parent().player2.h3pos_y'''
+	def show_heroes(self):# na razie pokazuje tylko odpowiadających bohaterów
+		player1 = self.parent().player1
+		player2 = self.parent().player2
+		#każdy ma od razu hero1 więc nie sprawdzam
+		self.h1x1, self.h1y1 = self.parent().player1.h1pos_x, self.parent().player1.h1pos_y
+		self.h1x2, self.h1y2 = self.parent().player2.h1pos_x, self.parent().player2.h1pos_y
+		self.set_hero(self.h1x1, self.h1y1, self.player1_button)
+		self.set_hero(self.h1x2, self.h1y2, self.player2_button)
 
-		self.set_hero(self.x1, self.y1, self.player1_button)
-		self.set_hero(self.x2, self.y2, self.player2_button)
+		if 2 in player1.avaliable_heroes: #resztę trzeba sprawdzić zanim się ich wyświtli
+			self.h2x1, self.h2y1 = self.parent().player1.h2pos_x, self.parent().player1.h2pos_y
+			self.set_hero_2(self.h2x1, self.h2y1, self.player1_button2)
+		if 2 in player2.avaliable_heroes:
+			self.h2x2, self.h2y2 = self.parent().player2.h2pos_x, self.parent().player2.h2pos_y
+			self.set_hero_2(self.h2x2, self.h2y2, self.player2_button2)
+		if 3 in player1.avaliable_heroes:
+			self.h3x1, self.h3y1 = self.parent().player1.h3pos_x, self.parent().player1.h3pos_y
+			self.set_hero_3(self.h3x1, self.h3y1, self.player1_button3)
+		if 3 in player2.avaliable_heroes:
+			self.h3x2, self.h3y2 = self.parent().player2.h3pos_x, self.parent().player2.h3pos_y
+			self.set_hero_3(self.h3x2, self.h3y2, self.player2_button3)
 
 	def generate_board(self, width, height):
 		'''for button in self.buttons:
@@ -152,32 +150,23 @@ class Board(QWidget):
 			self.set_button_stylesheet(which_one, 'sprites/hero2_p.png')
 		self.board.addWidget(which_one, y, x) #row / column
 
-
 	def set_hero_2(self, x, y, which_one):
-		if which_one == self.player1_button:
-			self.player1_button2 = QPushButton()
+		if which_one == self.player1_button2:
+			self.player1_button2.show()
 			self.set_button_stylesheet(self.player1_button2, 'sprites/hero1_2p.png')
-			self.board.addWidget(self.player1_button2, y, x)
 		else:
-			self.player2_button2 = QPushButton()
+			self.player2_button2.show()
 			self.set_button_stylesheet(self.player2_button2, 'sprites/hero2_2p.png')
-			self.board.addWidget(self.player2_button2, y, x)
-
+		self.board.addWidget(which_one, y, x)
 
 	def set_hero_3(self, x, y, which_one):
-		if which_one == self.player1_button:
-			self.player1_button3 = QPushButton()
+		if which_one == self.player1_button3:
+			self.player1_button3.show()
 			self.set_button_stylesheet(self.player1_button3, 'sprites/hero1_3p.png')
-			self.board.addWidget(self.player1_button3, y, x)
 		else:
-			self.player2_button3 = QPushButton()
+			self.player2_button3.show()
 			self.set_button_stylesheet(self.player2_button3, 'sprites/hero2_3p.png')
-			self.board.addWidget(self.player2_button3, y, x)
-
-
-	def unset_heroes(self):# próba ukrycia pionka postaci, który pojawia się pod strałką, ale nie wyszło
-		self.player1_button.hide()# deleteLater też nie diziała
-		self.player2_button.hide()
+		self.board.addWidget(which_one, y, x)
 
 	def set_button_stylesheet(self, button, image):
 		str = 'height: 60px; width: 60px; background-image: url(None); border-image: url("'

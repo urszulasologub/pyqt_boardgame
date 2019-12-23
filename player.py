@@ -132,7 +132,6 @@ class PlayerInfo(QWidget):
 class PlayerActions(QWidget):
 	def __init__(self, parent):
 		super(PlayerActions, self).__init__(parent)
-		#Daria, jeśli będziesz nazywać zmienne tak, ze nie będzie wiadomo co w nich jest, typu GRANDPA, to ja nie ręczę za siebie
 		self.main_window = self.parent().parent()
 		self.board = self.parent()
 		self.setStyleSheet("""
@@ -244,28 +243,26 @@ class PlayerActions(QWidget):
 			self.main_window.player1.avaliable_heroes.append(hero)
 			self.main_window.player1.hero = hero
 			self.main_window.player1.update_gold_amount(self.main_window.player1.gold - 1500)
-			if len(self.main_window.player1.avaliable_heroes) is 2:
-				self.board.set_hero_2(0, 0, self.board.player1_button)
+			if 2 in self.main_window.player1.avaliable_heroes:#powinno ci pozwolić od razu kupić bohatera 3, bez konieczności posiadania najpierw 2
+				self.board.set_hero_2(0, 0, self.board.player1_button2)
 			else:
-				self.board.set_hero_3(0, 0, self.board.player1_button)
+				self.board.set_hero_3(0, 0, self.board.player1_button3)
 		elif player is 2 and self.main_window.player2.gold >= 1500:
 			self.main_window.player2.avaliable_heroes.append(hero)
 			self.main_window.player2.hero = hero
 			self.main_window.player2.update_gold_amount(self.main_window.player2.gold - 1500)
 			pos = [self.board.parent().width - 1, self.board.parent().height - 1]
-			if len(self.main_window.player2.avaliable_heroes) is 2:
-				self.board.set_hero_2(pos[0], pos[1], self.board.player2_button)
+			if 2 in self.main_window.player2.avaliable_heroes:
+				self.board.set_hero_2(pos[0], pos[1], self.board.player2_button2)
 			else:
-				self.board.set_hero_3(pos[0], pos[1], self.board.player2_button)
+				self.board.set_hero_3(pos[0], pos[1], self.board.player2_button3)
 		self._dialog.close()
 
-	def set_hero_one(self):# chciałam zrobić na podstawie tekstu jaki jest na buttonie, ale nie wiem jak go wyciągnąć, więc są 3 funkcje xd
-		print("h1") #uważam, że od początku bohater1 powinien być dostępy, więc nie daje opcji kupienia go
+	def set_hero_one(self):
 		self.main_window.player1.hero = 1
 		self.main_window.player2.hero = 1
 
 	def set_hero_two(self):
-		print("h2")
 		if self.main_window.turn % 2 is 0:
 			if 2 in self.main_window.player2.avaliable_heroes:
 				self.main_window.player2.hero = 2
@@ -277,10 +274,8 @@ class PlayerActions(QWidget):
 				self.main_window.player1.hero = 2
 			else:
 				self.buy_new_hero(1, 2)
-		
 
 	def set_hero_three(self):
-		print("h3")
 		if self.main_window.turn % 2 is 0:
 			if 3 in self.main_window.player2.avaliable_heroes:
 				self.main_window.player2.hero = 3
