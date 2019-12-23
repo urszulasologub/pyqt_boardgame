@@ -31,8 +31,6 @@ class Board(QWidget):
 		#else:
 		#	self.unset_heroes()
 
-		#self.move_hero(self.player_info, 1)
-		#self.show_heroes()
 		self.generate_board(self.parent().width, self.parent().height)
 
 		act = PlayerActions(self)
@@ -115,23 +113,27 @@ class Board(QWidget):
 
 		self.tiles_amount = k
 
-		if self.parent().turn % 2 is 0: #coś się popsuło i nie wraca do gracza1, mimo, że dobrze odróżnia, który powinien być wyświetlony
-			print("jestem")
+		self.board.addWidget(self.parent().player2, 1, 1, self.parent().height - 2, self.parent().width / 2 - 1)# najpier dodaje oba, a pożniej chowam i pokazuje w zależności od tury
+		self.board.addWidget(self.parent().player1, 1, 1, self.parent().height - 2, self.parent().width / 2 - 1)
+
+		if self.parent().turn % 2 is 0:
 			self.player_info = self.parent().player2
+			self.parent().player1.hide()
+			self.player_info.show()
 			self.parent().day += 1
 			if self.parent().day % 7 is 1:
 				self.parent().week += 1
 		else:
-			print("tu")
-			self.player_info = self.parent().player1
-		self.board.addWidget(self.player_info, 1, 1, self.parent().height - 2, self.parent().width / 2 - 1)  # to co ture musi pokazywać informacje konkrenego gracza
+			self.player_info = self.parent().player1 #player_info nadal jest potrzebne, bo jest używane w innych miejscach w kodzie
+			self.parent().player2.hide()
+			self.player_info.show()
+		#self.board.addWidget(self.player_info, 1, 1, self.parent().height - 2, self.parent().width / 2 - 1) #tak nie chce dziłać
 
-		self.show_heroes()  # i pokazywać na nowo pionki
+		self.show_heroes()
 
 		if self.parent().turn is 1 and not self.parent().special_tiles:
 			self.generate_special_tiles()
-
-		if self.parent().day % 7 is 0 and self.parent().turn % 2 is 1:
+		elif self.parent().day % 7 is 1 and self.parent().turn % 2 is 1 and self.parent().turn is not 1:
 			self.parent().special_tiles.clear()
 			self.generate_special_tiles()
 
