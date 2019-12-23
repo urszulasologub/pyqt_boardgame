@@ -152,7 +152,6 @@ class PlayerActions(QWidget):
 			self.buttons.append(QPushButton(self.labels[i]))
 			self.grid.addWidget(self.buttons[i], i, 0)
 
-		dice = DiceRoll(self)
 		self.buttons[1].clicked.connect(self.change_turn)
 		self.buttons[3].clicked.connect(self.set_hero_one)
 		self.buttons[4].clicked.connect(self.set_hero_two)
@@ -265,7 +264,6 @@ class PlayerActions(QWidget):
 				self.grandpa.player1.hero = 2
 			else:
 				self.buy_new_hero(1, 2)
-
 
 	def set_hero_three(self):
 		print("h3")

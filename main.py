@@ -17,8 +17,6 @@ class Board(QWidget):
 		# self.parent().special_tiles = int(self.max_tiles / 4)
 		self.board = self.parent().board
 
-		self.generate_board(self.parent().width, self.parent().height)
-
 		self.player1_button = QPushButton()
 		self.player2_button = QPushButton()
 
@@ -33,21 +31,9 @@ class Board(QWidget):
 		#else:
 		#	self.unset_heroes()
 
-		if self.parent().turn % 2 is 0:
-			self.player_info = self.parent().player2
-			self.parent().day += 1
-			if self.parent().day % 7 is 1:
-				self.parent().week += 1
-		else:
-			self.player_info = self.parent().player1
-
 		#self.move_hero(self.player_info, 1)
-		self.show_heroes()
-
-
-		#self.player_info.update_week_day()
-		self.board.addWidget(self.player_info, 1, 1, self.parent().height - 2, self.parent().width / 2 - 1)
-		#only one player, because this widget will be changed depending on whose turn it is
+		#self.show_heroes()
+		self.generate_board(self.parent().width, self.parent().height)
 
 		act = PlayerActions(self)
 		place = self.parent().width / 2
@@ -91,11 +77,9 @@ class Board(QWidget):
 		self.set_hero(self.x1, self.y1, self.player1_button)
 		self.set_hero(self.x2, self.y2, self.player2_button)
 
-
-
 	def generate_board(self, width, height):
-		for button in self.buttons:
-			button.deleteLater()
+		'''for button in self.buttons:
+			button.deleteLater()'''
 		k = 0
 
 		for j in range(width - 1):
@@ -131,7 +115,20 @@ class Board(QWidget):
 
 		self.tiles_amount = k
 
-		if self.parent().turn is 1:
+		if self.parent().turn % 2 is 0: #coś się popsuło i nie wraca do gracza1, mimo, że dobrze odróżnia, który powinien być wyświetlony
+			print("jestem")
+			self.player_info = self.parent().player2
+			self.parent().day += 1
+			if self.parent().day % 7 is 1:
+				self.parent().week += 1
+		else:
+			print("tu")
+			self.player_info = self.parent().player1
+		self.board.addWidget(self.player_info, 1, 1, self.parent().height - 2, self.parent().width / 2 - 1)  # to co ture musi pokazywać informacje konkrenego gracza
+
+		self.show_heroes()  # i pokazywać na nowo pionki
+
+		if self.parent().turn is 1 and not self.parent().special_tiles:
 			self.generate_special_tiles()
 
 		if self.parent().day % 7 is 0 and self.parent().turn % 2 is 1:
@@ -142,12 +139,10 @@ class Board(QWidget):
 			if i in self.parent().special_tiles:
 				self.set_button_stylesheet(self.buttons[i], 'objects/treasure.png')
 
-
 	def generate_special_tiles(self):
-		self.special_tiles = []
 		for i in range(1, self.tiles_amount):
 			if randrange(3) == 1 and i is not int(self.tiles_amount / 2):
-				self.special_tiles.append(self.buttons[i])
+				self.parent().special_tiles.append(i)
 				self.set_button_stylesheet(self.buttons[i], 'objects/treasure.png')
 
 	def set_hero(self, x, y, which_one):
@@ -170,7 +165,6 @@ class Board(QWidget):
 		
 
 class mainWindow(QMainWindow):
-
 	def __init__(self, parent=None):
 		super(mainWindow, self).__init__(parent)
 
@@ -188,7 +182,8 @@ class mainWindow(QMainWindow):
 
 		self.special_tiles = [] #po to by się nie aktualizowało za wcześnie
 
-		self.show_info()
+		self.board_widget = Board(self)
+		self.setCentralWidget(self.board_widget)
 		self.setWindowTitle("Board game")
 		#self.showFullScreen()
 		self.move(0, 0)
@@ -199,7 +194,7 @@ class mainWindow(QMainWindow):
 			""")
 
 	def show_info(self):
-		self.setCentralWidget(Board(self))
+		self.board_widget.generate_board(self.width, self.height)
 
 	def roll_dice(self):
 		dice = DiceRoll(self)
