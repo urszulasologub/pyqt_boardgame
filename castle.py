@@ -29,14 +29,20 @@ class Castle(QDialog):
 		self.level4 = self.parent().in_castle_units['level_4']
 		self.level5 = self.parent().in_castle_units['level_5']
 
+
 		units = QLabel(
-			'Dostępne:\nJednostki poziomu 1: %d (0)\nJednostki poziomu 2: %d (0)\nJednostki poziomu 3: %d (0)\nJednostki poziomu 4: %d (0)\nJednostki poziomu 5: %d (0)\n'
-			% (self.level1, self.level2, self.level3, self.level4, self.level5))# nie wiem do czego odnosi się 0 w nawiasie, więc nic z tym nie robię xd
+			'Dostępne:\nJednostki poziomu 1: %d (%d)\nJednostki poziomu 2: %d (%d)\nJednostki poziomu 3: %d (%d)\nJednostki poziomu 4: %d (%d)\nJednostki poziomu 5: %d (%d)\n'
+			% (self.level1, self.parent().available_units['level_1'], 
+				self.level2, self.parent().available_units['level_2'], 
+				self.level3, self.parent().available_units['level_3'], 
+				self.level4, self.parent().available_units['level_4'],
+				self.level5, self.parent().available_units['level_5']))# nie wiem do czego odnosi się 0 w nawiasie, więc nic z tym nie robię xd
+			#odnosi się do ilości jednostek, które mozna kupić
 		
 		grid.addWidget(units)
 		upgrade = QLabel('Ulepsz zamek za 3000 złota')
 		grid.addWidget(upgrade)
-		prices = ['50', '100', '500', '1000', '2500']
+		prices = ['60', '100', '400', '1000', '3000']
 		available = [True, True, False, False, False]
 		for i in range(len(prices)):
 			if available[i]:

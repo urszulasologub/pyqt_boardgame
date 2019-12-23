@@ -48,12 +48,20 @@ class PlayerInfo(QWidget):
 		}
 
 		self.in_castle_units = {
-			"level_1": 10, #do testów losowe wartości
+			"level_1": 10,
 			"level_2": 5,
 			"level_3": 0,
 			"level_4": 0,
 			"level_5": 0
 		}
+
+		self.available_units = {
+			"level_1": 10,
+			"level_2": 5,
+			"level_3": 0,
+			"level_4": 0,
+			"level_5": 0
+		}		
 
 		self.unit_atk = {
 			"level_1": 6,
