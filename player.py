@@ -132,7 +132,9 @@ class PlayerInfo(QWidget):
 class PlayerActions(QWidget):
 	def __init__(self, parent):
 		super(PlayerActions, self).__init__(parent)
-		self.grandpa = self.parent().parent()
+		#Daria, jeśli będziesz nazywać zmienne tak, ze nie będzie wiadomo co w nich jest, typu GRANDPA, to ja nie ręczę za siebie
+		self.main_window = self.parent().parent()
+		self.board = self.parent()
 		self.setStyleSheet("""
 				background-image: url(UI/brown_background.jpg);
 				background-attachment: scroll;
@@ -160,18 +162,18 @@ class PlayerActions(QWidget):
 		self.setLayout(self.grid)
 
 	def move(self):
-		if self.grandpa.turn % 2 is 0:
-			hero = self.grandpa.player2.hero
-			player = self.grandpa.player2
+		if self.main_window.turn % 2 is 0:
+			hero = self.main_window.player2.hero
+			player = self.main_window.player2
 		else:
-			hero = self.grandpa.player1.hero
-			player = self.grandpa.player1
+			hero = self.main_window.player1.hero
+			player = self.main_window.player1
 
 		if player.can_move:
-			self.move_hero(player, hero, self.grandpa.height, self.grandpa.width)
+			self.move_hero(player, hero, self.main_window.height, self.main_window.width)
 			player.can_move = False
 			#Zmienić wartoś nowej zmiennej, że już się ruszył
-			self.grandpa.show_info()
+			self.main_window.show_info()
 		else:# zmieni się na jakiś dialog czy coś
 			print("Już się ruszyłeś w tej turze")
 
@@ -213,10 +215,10 @@ class PlayerActions(QWidget):
 					player.h3pos_y += 1
 
 	def change_turn(self):
-		self.grandpa.turn += 1
-		#print(self.grandpa.turn)
-		self.grandpa.roll_dice()
-		self.grandpa.show_info()
+		self.main_window.turn += 1
+		#print(self.main_window.turn)
+		self.main_window.roll_dice()
+		self.main_window.show_info()
 
 	def buy_new_hero(self, player, hero):
 		self._dialog = QDialog()
@@ -238,45 +240,55 @@ class PlayerActions(QWidget):
 		self._dialog.show()
 
 	def buy(self, player, hero):
-		if player is 1 and self.grandpa.player1.gold >= 1500:
-			self.grandpa.player1.avaliable_heroes.append(hero)
-			self.grandpa.player1.hero = hero
-			self.grandpa.player1.update_gold_amount(self.grandpa.player1.gold - 1500)
-		elif player is 2 and self.grandpa.player2.gold >= 1500:
-			self.grandpa.player2.avaliable_heroes.append(hero)
-			self.grandpa.player2.hero = hero
-			self.grandpa.player2.update_gold_amount(self.grandpa.player2.gold - 1500)
+		if player is 1 and self.main_window.player1.gold >= 1500:
+			self.main_window.player1.avaliable_heroes.append(hero)
+			self.main_window.player1.hero = hero
+			self.main_window.player1.update_gold_amount(self.main_window.player1.gold - 1500)
+			if len(self.main_window.player1.avaliable_heroes) is 2:
+				self.board.set_hero_2(0, 0, self.board.player1_button)
+			else:
+				self.board.set_hero_3(0, 0, self.board.player1_button)
+		elif player is 2 and self.main_window.player2.gold >= 1500:
+			self.main_window.player2.avaliable_heroes.append(hero)
+			self.main_window.player2.hero = hero
+			self.main_window.player2.update_gold_amount(self.main_window.player2.gold - 1500)
+			pos = [self.board.parent().width - 1, self.board.parent().height - 1]
+			if len(self.main_window.player2.avaliable_heroes) is 2:
+				self.board.set_hero_2(pos[0], pos[1], self.board.player2_button)
+			else:
+				self.board.set_hero_3(pos[0], pos[1], self.board.player2_button)
 		self._dialog.close()
 
 	def set_hero_one(self):# chciałam zrobić na podstawie tekstu jaki jest na buttonie, ale nie wiem jak go wyciągnąć, więc są 3 funkcje xd
 		print("h1") #uważam, że od początku bohater1 powinien być dostępy, więc nie daje opcji kupienia go
-		self.grandpa.player1.hero = 1
-		self.grandpa.player2.hero = 1
+		self.main_window.player1.hero = 1
+		self.main_window.player2.hero = 1
 
 	def set_hero_two(self):
 		print("h2")
-		if self.grandpa.turn % 2 is 0:
-			if 2 in self.grandpa.player2.avaliable_heroes:
-				self.grandpa.player2.hero = 2
+		if self.main_window.turn % 2 is 0:
+			if 2 in self.main_window.player2.avaliable_heroes:
+				self.main_window.player2.hero = 2
 			else:
 				self.buy_new_hero(2, 2)
 		else:
-			if 2 in self.grandpa.player1.avaliable_heroes:
+			if 2 in self.main_window.player1.avaliable_heroes:
 				print("hello")
-				self.grandpa.player1.hero = 2
+				self.main_window.player1.hero = 2
 			else:
 				self.buy_new_hero(1, 2)
+		
 
 	def set_hero_three(self):
 		print("h3")
-		if self.grandpa.turn % 2 is 0:
-			if 3 in self.grandpa.player2.avaliable_heroes:
-				self.grandpa.player2.hero = 3
+		if self.main_window.turn % 2 is 0:
+			if 3 in self.main_window.player2.avaliable_heroes:
+				self.main_window.player2.hero = 3
 			else:
 				self.buy_new_hero(2, 3)
 		else:
-			if 3 in self.grandpa.player1.avaliable_heroes:
-				self.grandpa.player1.hero = 3
+			if 3 in self.main_window.player1.avaliable_heroes:
+				self.main_window.player1.hero = 3
 			else:
 				self.buy_new_hero(1, 3)
 

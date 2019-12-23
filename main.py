@@ -28,8 +28,6 @@ class Board(QWidget):
 			self.parent().player2.h2pos_y = self.parent().height - 1
 			self.parent().player2.h3pos_x = self.parent().width - 1
 			self.parent().player2.h3pos_y = self.parent().height - 1
-		#else:
-		#	self.unset_heroes()
 
 		self.generate_board(self.parent().width, self.parent().height)
 
@@ -153,6 +151,29 @@ class Board(QWidget):
 		else:
 			self.set_button_stylesheet(which_one, 'sprites/hero2_p.png')
 		self.board.addWidget(which_one, y, x) #row / column
+
+
+	def set_hero_2(self, x, y, which_one):
+		if which_one == self.player1_button:
+			self.player1_button2 = QPushButton()
+			self.set_button_stylesheet(self.player1_button2, 'sprites/hero1_2p.png')
+			self.board.addWidget(self.player1_button2, y, x)
+		else:
+			self.player2_button2 = QPushButton()
+			self.set_button_stylesheet(self.player2_button2, 'sprites/hero2_2p.png')
+			self.board.addWidget(self.player2_button2, y, x)
+
+
+	def set_hero_3(self, x, y, which_one):
+		if which_one == self.player1_button:
+			self.player1_button3 = QPushButton()
+			self.set_button_stylesheet(self.player1_button3, 'sprites/hero1_3p.png')
+			self.board.addWidget(self.player1_button3, y, x)
+		else:
+			self.player2_button3 = QPushButton()
+			self.set_button_stylesheet(self.player2_button3, 'sprites/hero2_3p.png')
+			self.board.addWidget(self.player2_button3, y, x)
+
 
 	def unset_heroes(self):# próba ukrycia pionka postaci, który pojawia się pod strałką, ale nie wyszło
 		self.player1_button.hide()# deleteLater też nie diziała
