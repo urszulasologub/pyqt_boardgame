@@ -223,7 +223,7 @@ class PlayerActions(QWidget):
 		self._dialog.setWindowTitle("Kup bohatera")
 		layout = QVBoxLayout(self._dialog)#tymczasowo
 		text = QLabel()
-		text.setText("Tu kupisz nowego bohatera.\n Wiem, że wygląda brzydko xD")
+		text.setText("Kupić bohatera za 1500 sztuk złota?")
 		buy = QPushButton()
 		buy.setText("Kup")
 		buy.clicked.connect(lambda: self.buy(player, hero))
@@ -238,12 +238,14 @@ class PlayerActions(QWidget):
 		self._dialog.show()
 
 	def buy(self, player, hero):
-		if player is 1:
+		if player is 1 and self.grandpa.player1.gold >= 1500:
 			self.grandpa.player1.avaliable_heroes.append(hero)
 			self.grandpa.player1.hero = hero
-		else:
+			self.grandpa.player1.update_gold_amount(self.grandpa.player1.gold - 1500)
+		elif player is 2 and self.grandpa.player2.gold >= 1500:
 			self.grandpa.player2.avaliable_heroes.append(hero)
 			self.grandpa.player2.hero = hero
+			self.grandpa.player2.update_gold_amount(self.grandpa.player2.gold - 1500)
 		self._dialog.close()
 
 	def set_hero_one(self):# chciałam zrobić na podstawie tekstu jaki jest na buttonie, ale nie wiem jak go wyciągnąć, więc są 3 funkcje xd
