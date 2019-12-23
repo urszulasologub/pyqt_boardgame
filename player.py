@@ -24,24 +24,24 @@ class PlayerInfo(QWidget):
 		self.can_move = False
 
 		self.h1units = {
-			"level_1": 0,
-			"level_2": 0,
+			"level_1": 15,
+			"level_2": 10,
 			"level_3": 0,
 			"level_4": 0,
 			"level_5": 0
 		}
 
 		self.h2units = {
-			"level_1": 0,
-			"level_2": 0,
+			"level_1": 15,
+			"level_2": 10,
 			"level_3": 0,
 			"level_4": 0,
 			"level_5": 0
 		}
 
 		self.h3units = {
-			"level_1": 0,
-			"level_2": 0,
+			"level_1": 15,
+			"level_2": 10,
 			"level_3": 0,
 			"level_4": 0,
 			"level_5": 0
@@ -49,25 +49,26 @@ class PlayerInfo(QWidget):
 
 		self.in_castle_units = {
 			"level_1": 10, #do testów losowe wartości
-			"level_2": 4,
-			"level_3": 1000,
+			"level_2": 5,
+			"level_3": 0,
 			"level_4": 0,
 			"level_5": 0
 		}
 
 		self.unit_atk = {
-			"level_1": 0,
-			"level_2": 0,
-			"level_3": 0,
-			"level_4": 0,
-			"level_5": 0
+			"level_1": 6,
+			"level_2": 9,
+			"level_3": 12,
+			"level_4": 16,
+			"level_5": 30
 		}
-		self.unit_def = {
-			"level_1": 0,
-			"level_2": 0,
-			"level_3": 0,
-			"level_4": 0,
-			"level_5": 0
+
+		self.unit_health = {
+			"level_1": 10,
+			"level_2": 25,
+			"level_3": 40,
+			"level_4": 100,
+			"level_5": 250
 		}
 
 		super(PlayerInfo, self).__init__(parent)
