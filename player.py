@@ -243,7 +243,7 @@ class PlayerActions(QWidget):
 			self.main_window.player1.avaliable_heroes.append(hero)
 			self.main_window.player1.hero = hero
 			self.main_window.player1.update_gold_amount(self.main_window.player1.gold - 1500)
-			if len(self.main_window.player1.avaliable_heroes) is 2:#powinno ci pozwolić od razu kupić bohatera 3, bez konieczności posiadania najpierw 2
+			if hero is 2:#powinno ci pozwolić od razu kupić bohatera 3, bez konieczności posiadania najpierw 2
 				self.board.set_hero_2(0, 0, self.board.player1_button2)
 			else:
 				self.board.set_hero_3(0, 0, self.board.player1_button3)
@@ -252,7 +252,7 @@ class PlayerActions(QWidget):
 			self.main_window.player2.hero = hero
 			self.main_window.player2.update_gold_amount(self.main_window.player2.gold - 1500)
 			pos = [self.board.parent().width - 1, self.board.parent().height - 1]
-			if len(self.main_window.player2.avaliable_heroes) is 2:
+			if hero is 2:
 				self.board.set_hero_2(pos[0], pos[1], self.board.player2_button2)
 			else:
 				self.board.set_hero_3(pos[0], pos[1], self.board.player2_button3)
