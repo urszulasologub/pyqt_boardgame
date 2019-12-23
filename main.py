@@ -153,19 +153,19 @@ class Board(QWidget):
 	def set_hero_2(self, x, y, which_one):
 		if which_one == self.player1_button2:
 			self.player1_button2.show()
-			self.set_button_stylesheet(self.player1_button2, 'sprites/hero1_2p.png')
+			self.set_button_stylesheet(which_one, 'sprites/hero1_2p.png')
 		else:
 			self.player2_button2.show()
-			self.set_button_stylesheet(self.player2_button2, 'sprites/hero2_2p.png')
+			self.set_button_stylesheet(which_one, 'sprites/hero2_2p.png')
 		self.board.addWidget(which_one, y, x)
 
 	def set_hero_3(self, x, y, which_one):
 		if which_one == self.player1_button3:
 			self.player1_button3.show()
-			self.set_button_stylesheet(self.player1_button3, 'sprites/hero1_3p.png')
+			self.set_button_stylesheet(which_one, 'sprites/hero1_3p.png')
 		else:
 			self.player2_button3.show()
-			self.set_button_stylesheet(self.player2_button3, 'sprites/hero2_3p.png')
+			self.set_button_stylesheet(which_one, 'sprites/hero2_3p.png')
 		self.board.addWidget(which_one, y, x)
 
 	def set_button_stylesheet(self, button, image):
