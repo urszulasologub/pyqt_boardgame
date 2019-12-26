@@ -207,8 +207,10 @@ class mainWindow(QMainWindow):
 			""")
 
 		#for battle debugging:
-		#battle = Battle(self.player1, self.player2, '1', '2')
-		#print(battle.generate_battle_raport())
+		battle = Battle(self.player1, self.player2, '1', '1')
+		print(battle.generate_battle_raport())
+		print(self.player1.h1units)
+		print(self.player2.h1units)
 
 	def show_info(self):
 		self.board_widget.generate_board(self.width, self.height)

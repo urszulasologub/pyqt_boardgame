@@ -24,6 +24,8 @@ class Battle():
 					'castle': self.attacked_player.in_castle_units }
 		self.attacking_hero = attacking_dict[hero1]
 		self.attacked_hero = attacked_dict[hero2]
+		self.hero1 = hero1
+		self.hero2 = hero2
 
 		self.unit_atk = {
 			"level_1": 6,
@@ -40,6 +42,35 @@ class Battle():
 			"level_4": 100,
 			"level_5": 250
 		}
+
+
+
+
+	def update_winner(self, winner_player, hero, result_dict):
+		if hero == '1':
+			winner_player.h1units = result_dict
+		elif hero == '2':
+			winner_player.h2units = result_dict
+		elif hero == '3':
+			winner_player.h3units = result_dict
+		else:
+			winner_player.in_castle_units = result_dict
+
+
+	def update_loser(self, loser_player, hero):
+		result_dict = {'level_1': 0,
+					'level_2': 0,
+					'level_3': 0,
+					'level_4': 0,
+					'level_5': 0}
+		if hero == '1':
+			loser_player.h1units = result_dict
+		elif hero == '2':
+			loser_player.h2units = result_dict
+		elif hero == '3':
+			loser_player.h3units = result_dict
+		else:
+			loser_player.in_castle_units = result_dict
 
 
 	def generate_battle_raport(self):
@@ -79,9 +110,17 @@ class Battle():
 
 		self.raport += '\nBilans walki:\n'
 		if self.health(attacked_health) > 0:
+			self.winner = self.attacking_player
 			self.raport += 'Wygrał gracz atakujący.\n'
+			self.hero = self.hero1
+			self.loser = self.attacked_player
+			self.lost_hero = self.hero2
 		else:
+			self.winner = self.attacked_player
+			self.loser = self.attacking_player
 			self.raport += 'Atakowany gracz skutecznie obronił się przed agresorem i wygrał walkę.\n'
+			self.hero = self.hero2
+			self.lost_hero = self.hero1
 		winner_health = attacked_health
 		if self.health(attacking_health) > 0:
 			winner_health = attacking_health
@@ -89,6 +128,15 @@ class Battle():
 		for i in range(1, 6):
 			if winner_health['level_' + str(i)] > 0:
 				self.raport += 'Poziomu %d: %d\n' % (i, math.ceil(winner_health['level_' + str(i)] / self.unit_health['level_' + str(i)]))
+		
+		result_dict = {'level_1': math.ceil(winner_health['level_1'] / self.unit_health['level_1']),
+						'level_2': math.ceil(winner_health['level_2'] / self.unit_health['level_2']),
+						'level_3': math.ceil(winner_health['level_3'] / self.unit_health['level_3']),
+						'level_4': math.ceil(winner_health['level_4'] / self.unit_health['level_4']),
+						'level_5': math.ceil(winner_health['level_5'] / self.unit_health['level_5'])}
+
+		self.update_winner(self.winner, self.hero, result_dict)
+		self.update_loser(self.loser, self.lost_hero)
 		return self.raport
 
 
@@ -117,7 +165,6 @@ class Battle():
 					self.raport += ' zabijając wszystkie jednostki %s.\n' % level
 					health[level] = 0
 				else:
-					#units_lost = (damage / self.unit_health[level])
 					units = math.ceil(prev / self.unit_health[level])
 					current = math.ceil(health[level] / self.unit_health[level])
 					units_lost = int(units - current)
