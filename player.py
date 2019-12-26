@@ -6,6 +6,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
 from dice import DiceRoll
 from castle import Castle
+import math
 
 
 class PlayerInfo(QWidget):
@@ -28,7 +29,7 @@ class PlayerInfo(QWidget):
 			"level_2": 10,
 			"level_3": 0,
 			"level_4": 0,
-			"level_5": 0
+			"level_5": 0,
 		}
 
 		self.h2units = {

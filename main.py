@@ -7,6 +7,7 @@ from PyQt5.QtPrintSupport import *
 from player import *
 from dice import DiceRoll
 from random import randrange
+from battle import *
 
 
 class Board(QWidget):
@@ -204,6 +205,10 @@ class mainWindow(QMainWindow):
 				background-image: url(./UI/map_visual.png);
 				background-attachment: scroll;
 			""")
+
+		#for battle debugging:
+		#battle = Battle(self.player1, self.player2, '1', '2')
+		#print(battle.generate_battle_raport())
 
 	def show_info(self):
 		self.board_widget.generate_board(self.width, self.height)
