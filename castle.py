@@ -48,11 +48,11 @@ class Castle(QDialog):
 		button = []
 		for i in range(len(prices)):
 			button.append(QPushButton('Kup jednostkę poziomu %s za %s złota' % (str(i + 1), str(prices[i]))))
-		button[0].clicked.connect(lambda: self.buy_unit('level_1'))
-		button[1].clicked.connect(lambda: self.buy_unit('level_2'))
-		button[2].clicked.connect(lambda: self.buy_unit('level_3'))
-		button[3].clicked.connect(lambda: self.buy_unit('level_4'))
-		button[4].clicked.connect(lambda: self.buy_unit('level_5'))
+		button[0].clicked.connect(lambda: self.buy_unit(1))
+		button[1].clicked.connect(lambda: self.buy_unit(2))
+		button[2].clicked.connect(lambda: self.buy_unit(3))
+		button[3].clicked.connect(lambda: self.buy_unit(4))
+		button[4].clicked.connect(lambda: self.buy_unit(5))
 
 		for i in range(len(prices)):
 			if available[i]:
@@ -64,31 +64,40 @@ class Castle(QDialog):
 	def buy_unit(self, level):
 		self._dialog = QDialog()
 		self._dialog.setStyleSheet("""
-								background-image: url(UI/brown_background.jpg);
-								background-attachment: scroll;
-								border: 2px outset gray;
-								border-radius: 10px;
-								color: white;
-								font-size: 14pt;
-								font: Arial;
-								min-height: 20px;
-							""")
+									background-image: url(UI/brown_background.jpg);
+									background-attachment: scroll;
+									border: 2px outset gray;
+									border-radius: 10px;
+									color: white;
+									font-size: 14pt;
+									font: Arial;
+									min-height: 20px; """)
 		self._dialog.setWindowTitle("Kup jednostki")
+		self.curr_level = 'level_' + str(level) #potrzebuję ziennej level osobno, a nie chciałam się bawić w split
+		print(self.curr_level)
+
 		layout = QVBoxLayout(self._dialog)
 		text = QLabel("Ile jednostek chcesz kupić?")
 
-		#one pójdą do innego layoua poźniej
+		hlay = QHBoxLayout()
+		minus = QPushButton('-')
+		minus.setStyleSheet("min-width: 20px; max-width: 20px;")
+		minus.clicked.connect(self.substract)
 		self.slider = QSlider(Qt.Horizontal)
 		self.slider.setValue(1)
-		self.max_units = self.parent().available_units[level]
+		self.max_units = self.parent().available_units[self.curr_level]
 		self.slider.setMaximum(self.max_units)
 		self.slider.valueChanged[int].connect(self.changeValue)
-
-		self.value = QLineEdit()
+		plus = QPushButton('+')
+		plus.setStyleSheet("min-width: 20px; max-width: 20px;")
+		plus.clicked.connect(self.add)
+		self.value = QLabel()
+		self.value.setAlignment(Qt.AlignCenter)
 		self.value.setText(str(1))
-		self.value.setValidator(QIntValidator())
-		self.curr_level = level
-		self.value.textChanged.connect(self.changeSlider)
+
+		hlay.addWidget(minus)
+		hlay.addWidget(self.slider)
+		hlay.addWidget(plus)
 
 		buy = QPushButton()
 		buy.setText("Kup")
@@ -98,8 +107,7 @@ class Castle(QDialog):
 		cancel.clicked.connect(self._dialog.close)
 
 		layout.addWidget(text)
-
-		layout.addWidget(self.slider)
+		layout.addLayout(hlay)
 		layout.addWidget(self.value)
 
 		layout.addWidget(buy)
@@ -109,22 +117,21 @@ class Castle(QDialog):
 
 	def buy(self):
 		print("kupione xD")
+		#po kupieniu musi zupdejtować player info, więc zupdejtuje całą planszę xd
+		self._dialog.close()
 
-	def validate(self, value):
-		if int(value) > self.parent().available_units[self.curr_level]:
-			return self.parent().available_units[self.curr_level]
-		elif int(value) < 0:
-			return value
-		else:
-			return 0
+	def substract(self):
+		value = self.slider.value()
+		if value is not 0:
+			#tu ta zmiana co niżej opisałam
+			self.slider.setValue(value-1)
 
 	def changeValue(self, value):
 		#zmiana wartości do zakupu w jakiejś zmiennej
 		self.value.setText(str(value))
 
-	def changeSlider(self):
-		#wywala na pustym, póżniej zmienię na przyciski + i -
-		value = self.value.text()
-		value = self.validate(value)
-		#ta sama zmiana wartości co wyżej
-		self.slider.setValue(int(value))
+	def add(self):
+		value = self.slider.value()
+		if value is not self.max_units:
+			# tu ta zmiana co wyżej opisałam
+			self.slider.setValue(value+1)
