@@ -59,10 +59,10 @@ class PlayerInfo(QWidget):
 		self.available_units = {
 			"level_1": 10,
 			"level_2": 5,
-			"level_3": 0,
-			"level_4": 0,
-			"level_5": 0
-		}		
+			"level_3": 5,
+			"level_4": 5,
+			"level_5": 5
+		}# powiedzmy, że od razu może kupić 5, poza poziomem 1
 
 		super(PlayerInfo, self).__init__(parent)
 		color = 'darkblue'
@@ -215,6 +215,16 @@ class PlayerActions(QWidget):
 
 	def buy_new_hero(self, player, hero):
 		self._dialog = QDialog()
+		self._dialog.setStyleSheet("""
+						background-image: url(UI/brown_background.jpg);
+						background-attachment: scroll;
+						border: 2px outset gray;
+						border-radius: 10px;
+						color: white;
+						font-size: 14pt;
+						font: Arial;
+						min-height: 20px;
+					""")
 		self._dialog.setWindowTitle("Kup bohatera")
 		layout = QVBoxLayout(self._dialog)#tymczasowo
 		text = QLabel()
@@ -237,7 +247,7 @@ class PlayerActions(QWidget):
 			self.main_window.player1.avaliable_heroes.append(hero)
 			self.main_window.player1.hero = hero
 			self.main_window.player1.update_gold_amount(self.main_window.player1.gold - 1500)
-			if hero is 2:#powinno ci pozwolić od razu kupić bohatera 3, bez konieczności posiadania najpierw 2
+			if hero is 2:
 				self.board.set_hero_2(0, 0, self.board.player1_button2)
 			else:
 				self.board.set_hero_3(0, 0, self.board.player1_button3)
