@@ -63,22 +63,6 @@ class PlayerInfo(QWidget):
 			"level_5": 0
 		}		
 
-		self.unit_atk = {
-			"level_1": 6,
-			"level_2": 9,
-			"level_3": 12,
-			"level_4": 16,
-			"level_5": 30
-		}
-
-		self.unit_health = {
-			"level_1": 10,
-			"level_2": 25,
-			"level_3": 40,
-			"level_4": 100,
-			"level_5": 250
-		}
-
 		super(PlayerInfo, self).__init__(parent)
 		color = 'darkblue'
 		if player == 'Gracz 1':
