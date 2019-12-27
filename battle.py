@@ -60,6 +60,7 @@ class Battle():
 					'level_5': 0}
 		if hero == '1':
 			loser_player.h1units = result_dict
+
 		elif hero == '2':
 			loser_player.h2units = result_dict
 		elif hero == '3':
@@ -201,7 +202,7 @@ class Battle():
 
 
 class BattleDialog(QDialog):
-	def __init__(self, parent, battle, whose_turn):
+	def __init__(self, parent, battle, whose_turn):	#parent -> PlayerActions, parent.parent -> Board
 		super(BattleDialog, self).__init__(parent)
 		self.raport = battle.raport
 		self._dialog = QDialog(self)
@@ -214,6 +215,22 @@ class BattleDialog(QDialog):
 				font: Arial;
 				min-height: 15px;
 			""")
+		main_window = self.parent().parent().parent()
+		board = self.parent().parent()
+		if main_window.player1 == battle.winner:
+			if battle.lost_hero == '1':
+				board.player2_button.hide()
+			elif battle.lost_hero == '2':
+				board.player2_button2.hide()
+			elif battle.lost_hero == '3':
+				board.player2_button3.hide()
+		else:
+			if battle.lost_hero == '1':
+				board.player1_button.hide()
+			elif battle.lost_hero == '2':
+				board.player1_button2.hide()
+			elif battle.lost_hero == '3':
+				board.player1_button3.hide()
 		grid = QGridLayout(self)
 		if whose_turn == battle.winner:
 			self.setWindowTitle('Zwycięstwo')
@@ -235,7 +252,7 @@ class BattleDialog(QDialog):
 				color: white;
 				font-size: 10pt;
 				font: Arial;
-				min-height: 15px;
+				min-height: 100px;
 				min-width: 450px;
 			""")
 

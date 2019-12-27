@@ -267,12 +267,15 @@ class PlayerActions(QWidget):
 		self._dialog.setLayout(layout)
 		self._dialog.show()
 
+
 	def buy(self, player, hero):
 		if player is 1 and self.main_window.player1.gold >= 1500:
 			self.main_window.player1.available_heroes.append(hero)
 			self.main_window.player1.hero = hero
 			self.main_window.player1.update_gold_amount(self.main_window.player1.gold - 1500)
-			if hero is 2:#powinno ci pozwolić od razu kupić bohatera 3, bez konieczności posiadania najpierw 2
+			if hero is 1:
+				self.board.set_hero(0, 0, self.board.player1_button)
+			elif hero is 2:#powinno ci pozwolić od razu kupić bohatera 3, bez konieczności posiadania najpierw 2
 				self.board.set_hero_2(0, 0, self.board.player1_button2)
 			else:
 				self.board.set_hero_3(0, 0, self.board.player1_button3)
@@ -281,15 +284,27 @@ class PlayerActions(QWidget):
 			self.main_window.player2.hero = hero
 			self.main_window.player2.update_gold_amount(self.main_window.player2.gold - 1500)
 			pos = [self.board.parent().width - 1, self.board.parent().height - 1]
-			if hero is 2:
+			if hero is 1:
+				self.board.set_hero(pos[0], pos[1], self.board.player2_button)
+			elif hero is 2:
 				self.board.set_hero_2(pos[0], pos[1], self.board.player2_button2)
 			else:
 				self.board.set_hero_3(pos[0], pos[1], self.board.player2_button3)
 		self._dialog.close()
 
+
 	def set_hero_one(self):
-		self.main_window.player1.hero = 1
-		self.main_window.player2.hero = 1
+		if self.main_window.turn % 2 is 0:
+			if 1 in self.main_window.player2.available_heroes:
+				self.main_window.player2.hero = 1
+			else:
+				self.buy_new_hero(2, 1)
+		else:
+			if 1 in self.main_window.player1.available_heroes:
+				self.main_window.player1.hero = 1
+			else:
+				self.buy_new_hero(1, 1)
+
 
 	def set_hero_two(self):
 		if self.main_window.turn % 2 is 0:
@@ -302,6 +317,7 @@ class PlayerActions(QWidget):
 				self.main_window.player1.hero = 2
 			else:
 				self.buy_new_hero(1, 2)
+
 
 	def set_hero_three(self):
 		if self.main_window.turn % 2 is 0:

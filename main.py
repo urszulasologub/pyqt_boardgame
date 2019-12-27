@@ -14,8 +14,6 @@ class Board(QWidget):
 	def __init__(self, parent):
 		super(Board, self).__init__(parent)
 		self.buttons = []
-		# self.max_tiles = self.width * 2 + self.height * 2 - 4
-		# self.parent().special_tiles = int(self.max_tiles / 4)
 		self.board = self.parent().board
 
 		self.player1_button = QPushButton()
@@ -54,11 +52,15 @@ class Board(QWidget):
 	def show_heroes(self):# na razie pokazuje tylko odpowiadających bohaterów
 		player1 = self.parent().player1
 		player2 = self.parent().player2
+		
 		#każdy ma od razu hero1 więc nie sprawdzam
-		self.h1x1, self.h1y1 = self.parent().player1.h1pos_x, self.parent().player1.h1pos_y
-		self.h1x2, self.h1y2 = self.parent().player2.h1pos_x, self.parent().player2.h1pos_y
-		self.set_hero(self.h1x1, self.h1y1, self.player1_button)
-		self.set_hero(self.h1x2, self.h1y2, self.player2_button)
+		#a powinnaś, bo hero1 mozna stracić ;)
+		if 1 in player1.available_heroes:
+			self.h1x1, self.h1y1 = self.parent().player1.h1pos_x, self.parent().player1.h1pos_y
+			self.set_hero(self.h1x1, self.h1y1, self.player1_button)
+		if 1 in player2.available_heroes:
+			self.h1x2, self.h1y2 = self.parent().player2.h1pos_x, self.parent().player2.h1pos_y
+			self.set_hero(self.h1x2, self.h1y2, self.player2_button)
 
 		if 2 in player1.available_heroes: #resztę trzeba sprawdzić zanim się ich wyświtli
 			self.h2x1, self.h2y1 = self.parent().player1.h2pos_x, self.parent().player1.h2pos_y
@@ -148,8 +150,10 @@ class Board(QWidget):
 
 	def set_hero(self, x, y, which_one):
 		if which_one == self.player1_button:
+			self.player1_button.show()
 			self.set_button_stylesheet(which_one, 'sprites/hero1_p.png')
 		else:
+			self.player2_button.show()
 			self.set_button_stylesheet(which_one, 'sprites/hero2_p.png')
 		self.board.addWidget(which_one, y, x) #row / column
 
