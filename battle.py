@@ -1,12 +1,9 @@
 import os, sys
-
+import math
+from random import randrange
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from PyQt5.QtPrintSupport import *
-from player import *
-from dice import DiceRoll
-from random import randrange
 
 
 class Battle():
@@ -16,14 +13,15 @@ class Battle():
 		#attacking player always starts battle
 		attacking_dict = {'1': self.attacking_player.h1units,
 					'2': self.attacking_player.h2units,
-					'3': self.attacking_player.h3units,
-					'castle': self.attacking_player.in_castle_units }
+					'3': self.attacking_player.h3units } #castle cannot be an attacking side
 		attacked_dict = {'1': self.attacked_player.h1units,
 					'2': self.attacked_player.h2units,
 					'3': self.attacked_player.h3units,
 					'castle': self.attacked_player.in_castle_units }
 		self.attacking_hero = attacking_dict[hero1]
 		self.attacked_hero = attacked_dict[hero2]
+		self.hero1 = hero1
+		self.hero2 = hero2
 
 		self.unit_atk = {
 			"level_1": 6,
@@ -40,6 +38,43 @@ class Battle():
 			"level_4": 100,
 			"level_5": 250
 		}
+
+
+	def update_winner(self, winner_player, hero, result_dict):
+		if hero == '1':
+			winner_player.h1units = result_dict
+		elif hero == '2':
+			winner_player.h2units = result_dict
+		elif hero == '3':
+			winner_player.h3units = result_dict
+		else:
+			winner_player.in_castle_units = result_dict
+
+
+	#must come back to default values, because this hero will be available for buying now
+	def update_loser(self, loser_player, hero):
+		result_dict = {'level_1': 15,
+					'level_2': 10,
+					'level_3': 0,
+					'level_4': 0,
+					'level_5': 0}
+		if hero == '1':
+			loser_player.h1units = result_dict
+
+		elif hero == '2':
+			loser_player.h2units = result_dict
+		elif hero == '3':
+			loser_player.h3units = result_dict
+		else:
+			loser_player.in_castle_units = result_dict
+		if hero is not 'castle':
+			if int(hero) in loser_player.available_heroes:
+				loser_player.available_heroes.remove(int(hero))
+				loser_player.clear_hero_pos(int(hero))
+			if loser_player.available_heroes:
+				loser_player.hero = loser_player.available_heroes[0]
+			else:
+				loser_player.hero = None
 
 
 	def generate_battle_raport(self):
@@ -78,10 +113,18 @@ class Battle():
 						break
 
 		self.raport += '\nBilans walki:\n'
-		if self.health(attacked_health) > 0:
+		if self.health(attacking_health) > 0:
+			self.winner = self.attacking_player
 			self.raport += 'Wygrał gracz atakujący.\n'
+			self.hero = self.hero1
+			self.loser = self.attacked_player
+			self.lost_hero = self.hero2
 		else:
+			self.winner = self.attacked_player
+			self.loser = self.attacking_player
 			self.raport += 'Atakowany gracz skutecznie obronił się przed agresorem i wygrał walkę.\n'
+			self.hero = self.hero2
+			self.lost_hero = self.hero1
 		winner_health = attacked_health
 		if self.health(attacking_health) > 0:
 			winner_health = attacking_health
@@ -89,6 +132,15 @@ class Battle():
 		for i in range(1, 6):
 			if winner_health['level_' + str(i)] > 0:
 				self.raport += 'Poziomu %d: %d\n' % (i, math.ceil(winner_health['level_' + str(i)] / self.unit_health['level_' + str(i)]))
+		
+		result_dict = {'level_1': math.ceil(winner_health['level_1'] / self.unit_health['level_1']),
+						'level_2': math.ceil(winner_health['level_2'] / self.unit_health['level_2']),
+						'level_3': math.ceil(winner_health['level_3'] / self.unit_health['level_3']),
+						'level_4': math.ceil(winner_health['level_4'] / self.unit_health['level_4']),
+						'level_5': math.ceil(winner_health['level_5'] / self.unit_health['level_5'])}
+
+		self.update_winner(self.winner, self.hero, result_dict)
+		self.update_loser(self.loser, self.lost_hero)
 		return self.raport
 
 
@@ -117,7 +169,6 @@ class Battle():
 					self.raport += ' zabijając wszystkie jednostki %s.\n' % level
 					health[level] = 0
 				else:
-					#units_lost = (damage / self.unit_health[level])
 					units = math.ceil(prev / self.unit_health[level])
 					current = math.ceil(health[level] / self.unit_health[level])
 					units_lost = int(units - current)
@@ -146,11 +197,78 @@ class Battle():
 		return health
 				
 
+	def return_winner(self):
+		return self.winner
 
 
+class BattleDialog(QDialog):
+	def __init__(self, parent, battle, whose_turn):	#parent -> PlayerActions, parent.parent -> Board
+		super(BattleDialog, self).__init__(parent)
+		self.raport = battle.raport
+		self._dialog = QDialog(self)
+		self.setStyleSheet("""
+				background-image: url(UI/brown_background.jpg);
+				border: 2px outset gray;
+				border-radius: 10px;
+				color: white;
+				font-size: 10pt;
+				font: Arial;
+				min-height: 15px;
+			""")
+		main_window = self.parent().parent().parent()
+		board = self.parent().parent()
+		if main_window.player1 == battle.winner:
+			if battle.lost_hero == '1':
+				board.player2_button.hide()
+			elif battle.lost_hero == '2':
+				board.player2_button2.hide()
+			elif battle.lost_hero == '3':
+				board.player2_button3.hide()
+		else:
+			if battle.lost_hero == '1':
+				board.player1_button.hide()
+			elif battle.lost_hero == '2':
+				board.player1_button2.hide()
+			elif battle.lost_hero == '3':
+				board.player1_button3.hide()
+		grid = QGridLayout(self)
+		if whose_turn == battle.winner:
+			self.setWindowTitle('Zwycięstwo')
+			label = QLabel(self)
+			pixmap = QPixmap('UI/win.png')
+			pixmap = pixmap.scaledToWidth(450)
+			label.setPixmap(pixmap)
+			grid.addWidget(label)
+		else:
+			self.setWindowTitle('Przegrana')
+			label = QLabel(self)
+			pixmap = QPixmap('UI/lose.png')
+			pixmap = pixmap.scaledToWidth(450)
+			label.setPixmap(pixmap)
+			grid.addWidget(label)
 
+		message = QLabel(self.raport)
+		message.setStyleSheet("""
+				color: white;
+				font-size: 10pt;
+				font: Arial;
+				min-height: 100px;
+				min-width: 450px;
+			""")
+
+		self.scrollArea = QScrollArea(self)
+		self.scrollArea.setWidgetResizable(False)
+		self.scrollAreaWidgetContents = message
+		self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+		grid.addWidget(self.scrollArea)
 		
+		ok = QPushButton('OK')
+		ok.clicked.connect(lambda: self.close())
+		grid.addWidget(ok)
 
+		self.setLayout(grid)
+
+		self.exec_()
 	
 
 

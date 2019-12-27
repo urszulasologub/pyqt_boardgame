@@ -7,15 +7,12 @@ from PyQt5.QtPrintSupport import *
 from player import *
 from dice import DiceRoll
 from random import randrange
-from battle import *
 
 
 class Board(QWidget):
 	def __init__(self, parent):
 		super(Board, self).__init__(parent)
 		self.buttons = []
-		# self.max_tiles = self.width * 2 + self.height * 2 - 4
-		# self.parent().special_tiles = int(self.max_tiles / 4)
 		self.board = self.parent().board
 
 		self.player1_button = QPushButton()
@@ -50,31 +47,35 @@ class Board(QWidget):
 		self.setLayout(self.board)
 		self.show()
 
+
 	def show_heroes(self):# na razie pokazuje tylko odpowiadających bohaterów
 		player1 = self.parent().player1
 		player2 = self.parent().player2
-		#każdy ma od razu hero1 więc nie sprawdzam
-		self.h1x1, self.h1y1 = self.parent().player1.h1pos_x, self.parent().player1.h1pos_y
-		self.h1x2, self.h1y2 = self.parent().player2.h1pos_x, self.parent().player2.h1pos_y
-		self.set_hero(self.h1x1, self.h1y1, self.player1_button)
-		self.set_hero(self.h1x2, self.h1y2, self.player2_button)
 
-		if 2 in player1.avaliable_heroes: #resztę trzeba sprawdzić zanim się ich wyświtli
+		#każdy ma od razu hero1 więc nie sprawdzam
+		#a powinnaś, bo hero1 mozna stracić ;)
+		if 1 in player1.available_heroes:
+			self.h1x1, self.h1y1 = self.parent().player1.h1pos_x, self.parent().player1.h1pos_y
+			self.set_hero(self.h1x1, self.h1y1, self.player1_button)
+		if 1 in player2.available_heroes:
+			self.h1x2, self.h1y2 = self.parent().player2.h1pos_x, self.parent().player2.h1pos_y
+			self.set_hero(self.h1x2, self.h1y2, self.player2_button)
+
+		if 2 in player1.available_heroes: #resztę trzeba sprawdzić zanim się ich wyświtli
 			self.h2x1, self.h2y1 = self.parent().player1.h2pos_x, self.parent().player1.h2pos_y
 			self.set_hero_2(self.h2x1, self.h2y1, self.player1_button2)
-		if 2 in player2.avaliable_heroes:
+		if 2 in player2.available_heroes:
 			self.h2x2, self.h2y2 = self.parent().player2.h2pos_x, self.parent().player2.h2pos_y
 			self.set_hero_2(self.h2x2, self.h2y2, self.player2_button2)
-		if 3 in player1.avaliable_heroes:
+		if 3 in player1.available_heroes:
 			self.h3x1, self.h3y1 = self.parent().player1.h3pos_x, self.parent().player1.h3pos_y
 			self.set_hero_3(self.h3x1, self.h3y1, self.player1_button3)
-		if 3 in player2.avaliable_heroes:
+		if 3 in player2.available_heroes:
 			self.h3x2, self.h3y2 = self.parent().player2.h3pos_x, self.parent().player2.h3pos_y
 			self.set_hero_3(self.h3x2, self.h3y2, self.player2_button3)
 
+
 	def generate_board(self, width, height):
-		'''for button in self.buttons:
-			button.deleteLater()'''
 		k = 0
 
 		for j in range(width - 1):
@@ -152,18 +153,24 @@ class Board(QWidget):
 			if i in self.parent().special_tiles:
 				self.set_button_stylesheet(self.buttons[i], 'objects/treasure.png')
 
+
 	def generate_special_tiles(self):
+		self.parent().special_tiles.clear()
 		for i in range(1, self.tiles_amount):
 			if randrange(3) == 1 and i is not int(self.tiles_amount / 2):
 				self.parent().special_tiles.append(i)
 				self.set_button_stylesheet(self.buttons[i], 'objects/treasure.png')
 
+
 	def set_hero(self, x, y, which_one):
 		if which_one == self.player1_button:
+			self.player1_button.show()
 			self.set_button_stylesheet(which_one, 'sprites/hero1_p.png')
 		else:
+			self.player2_button.show()
 			self.set_button_stylesheet(which_one, 'sprites/hero2_p.png')
 		self.board.addWidget(which_one, y, x) #row / column
+
 
 	def set_hero_2(self, x, y, which_one):
 		if which_one == self.player1_button2:
@@ -174,6 +181,7 @@ class Board(QWidget):
 			self.set_button_stylesheet(which_one, 'sprites/hero2_2p.png')
 		self.board.addWidget(which_one, y, x)
 
+
 	def set_hero_3(self, x, y, which_one):
 		if which_one == self.player1_button3:
 			self.player1_button3.show()
@@ -183,13 +191,44 @@ class Board(QWidget):
 			self.set_button_stylesheet(which_one, 'sprites/hero2_3p.png')
 		self.board.addWidget(which_one, y, x)
 
+
 	def set_button_stylesheet(self, button, image):
 		str = 'height: 60px; width: 60px; background-image: url(None); border-image: url("'
 		str += image
 		str += '");'
 		button.setStyleSheet(str)
 		return button
-		
+
+
+	def get_opponent_on_tile(self, x, y):
+		#1, 2, 3 or castle
+		objects = []
+		if self.parent().turn % 2 == 1:
+			if self.parent().player2.h1pos_x == x and self.parent().player2.h1pos_y == y:
+				if 1 in self.parent().player2.available_heroes:
+					objects.append('1')
+			if self.parent().player2.h2pos_x == x and self.parent().player2.h2pos_y == y:
+				if 2 in self.parent().player2.available_heroes:
+					objects.append('2')
+			if self.parent().player2.h3pos_x == x and self.parent().player2.h3pos_y == y:
+				if 3 in self.parent().player2.available_heroes:
+					objects.append('3')
+			if self.parent().player2.castle_x == x and self.parent().player2.castle_y == y:
+				objects.append('castle')
+		else:
+			if self.parent().player1.h1pos_x == x and self.parent().player1.h1pos_y == y:
+				if 1 in self.parent().player1.available_heroes:
+					objects.append('1')
+			if self.parent().player1.h2pos_x == x and self.parent().player1.h2pos_y == y:
+				if 2 in self.parent().player1.available_heroes:
+					objects.append('2')
+			if self.parent().player1.h3pos_x == x and self.parent().player1.h3pos_y == y:
+				if 3 in self.parent().player1.available_heroes:
+					objects.append('3')		
+			if self.parent().player1.castle_x == x and self.parent().player1.castle_y == y:
+				objects.append('castle')	
+		return objects
+
 
 class mainWindow(QMainWindow):
 	def __init__(self, parent=None):
@@ -204,15 +243,15 @@ class mainWindow(QMainWindow):
 		self.height = 10
 
 		self.board = QGridLayout(self) # nie wiem czemu ale musi być tu inaczej jak 2 raz musi wyświetlić pierwszego gracza to się psuje ;(
-		self.player1 = PlayerInfo(self, 'Gracz 1')
-		self.player2 = PlayerInfo(self, 'Gracz 2')
+		self.player1 = PlayerInfo(self, 'Gracz 1', 0, 0)
+		self.player2 = PlayerInfo(self, 'Gracz 2', self.width - 1, self.height - 1)
 		self.roll_dice()
 
 		self.special_tiles = [] #po to by się nie aktualizowało za wcześnie
 
 		self.board_widget = Board(self)
 		self.setCentralWidget(self.board_widget)
-		self.setWindowTitle("Board game")
+		self.setWindowTitle('Heroes of Might and Magic: Gra planszowa')
 		#self.showFullScreen()
 		self.move(0, 0)
 
@@ -221,12 +260,10 @@ class mainWindow(QMainWindow):
 				background-attachment: scroll;
 			""")
 
-		#for battle debugging:
-		#battle = Battle(self.player1, self.player2, '1', '2')
-		#print(battle.generate_battle_raport())
 
 	def show_info(self):
 		self.board_widget.generate_board(self.width, self.height)
+
 
 	def roll_dice(self):
 		dice = DiceRoll(self)

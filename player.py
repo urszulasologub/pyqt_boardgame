@@ -7,10 +7,13 @@ from PyQt5.QtPrintSupport import *
 from dice import DiceRoll
 from castle import Castle
 import math
+from battle import *
 
 
 class PlayerInfo(QWidget):
-	def __init__(self, parent, player):
+	def __init__(self, parent, player, castle_x, castle_y):
+		self.castle_x = castle_x
+		self.castle_y = castle_y
 		self.castle_level = 1
 		self.gold = 0
 		self.dice = 0
@@ -21,7 +24,7 @@ class PlayerInfo(QWidget):
 		self.h3pos_x = 0
 		self.h3pos_y = 0
 		self.hero = 1# to którym obecnie bohaterem się porusza
-		self.avaliable_heroes = [1]
+		self.available_heroes = [1]
 		self.can_move = False
 
 		self.h1units = {
@@ -96,8 +99,10 @@ class PlayerInfo(QWidget):
 		self.update_gold_amount(5000)
 		#self.update_week_day()
 
+
 	def show_castle(self):
 		self.castle.show_castle()
+
 
 	def update_castle_level(self, level):
 		self.castle_level = level
@@ -105,11 +110,13 @@ class PlayerInfo(QWidget):
 		self.labels[1] = QLabel(text)
 		self.grid.addWidget(self.labels[1], 2, 0)
 
+
 	def update_gold_amount(self, amount):
 		self.gold = amount
 		text = 'Złoto: ' + str(amount)
 		self.labels[2] = QLabel(text)
 		self.grid.addWidget(self.labels[2], 3, 0)
+
 
 	def update_dice_amount(self, amount):
 		self.dice = amount
@@ -117,10 +124,23 @@ class PlayerInfo(QWidget):
 		self.labels[3] = QLabel(text)
 		self.grid.addWidget(self.labels[3], 4, 0)
 
+
 	def update_week_day(self, week, day): # z jakiegoś powodu, jak się używa parent() to wywala cały program
 		text = 'Tydzień: ' + str(week) + ', Dzień: ' + str(day)
 		self.labels[4] = QLabel(text)
 		self.grid.addWidget(self.labels[4], 5, 0)
+
+
+	def clear_hero_pos(self, hero_num):
+		if hero_num == 1:
+			self.h1pos_x = self.castle_x
+			self.h1pos_y = self.castle_y
+		elif hero_num == 2:
+			self.h2pos_x = self.castle_x
+			self.h2pos_y = self.castle_y
+		else:
+			self.h3pos_x = self.castle_x
+			self.h3pos_y = self.castle_y
 
 #akcje zawsze są te same, więc nie potrzeba podawać gracza
 class PlayerActions(QWidget):
@@ -149,11 +169,40 @@ class PlayerActions(QWidget):
 
 		self.buttons[0].clicked.connect(self.show_team)
 		self.buttons[1].clicked.connect(self.change_turn)
+		self.buttons[2].clicked.connect(self.start_combat)
 		self.buttons[3].clicked.connect(self.set_hero_one)
 		self.buttons[4].clicked.connect(self.set_hero_two)
 		self.buttons[5].clicked.connect(self.set_hero_three)
 		self.buttons[6].clicked.connect(self.move)
 		self.setLayout(self.grid)
+
+
+	def start_combat(self):
+		if self.main_window.turn % 2 is 1:
+			whose_turn = self.main_window.player1
+			attacked = self.main_window.player2
+		else:
+			whose_turn = self.main_window.player2
+			attacked = self.main_window.player1
+		if whose_turn.hero is not None:
+			if whose_turn.hero == 1:
+				x = whose_turn.h1pos_x
+				y = whose_turn.h1pos_y
+			elif whose_turn.hero == 2:
+				x = whose_turn.h2pos_x
+				y = whose_turn.h2pos_y	
+			elif whose_turn.hero == 3:	
+				x = whose_turn.h3pos_x
+				y = whose_turn.h3pos_y
+			opponent = self.board.get_opponent_on_tile(x, y)	
+			print(opponent)
+			if opponent:	
+				battle = Battle(whose_turn, attacked, str(whose_turn.hero), opponent[0])
+				raport = battle.generate_battle_raport()
+				battle_dialog = BattleDialog(self, battle, whose_turn)
+			else:
+				print('Nie ma zadnego przeciwnika')
+
 
 	def move(self):
 		if self.main_window.turn % 2 is 0:
@@ -243,50 +292,66 @@ class PlayerActions(QWidget):
 		self._dialog.setLayout(layout)
 		self._dialog.show()
 
+
 	def buy(self, player, hero):
 		if player is 1 and self.main_window.player1.gold >= 1500:
-			self.main_window.player1.avaliable_heroes.append(hero)
+			self.main_window.player1.available_heroes.append(hero)
 			self.main_window.player1.hero = hero
 			self.main_window.player1.update_gold_amount(self.main_window.player1.gold - 1500)
-			if hero is 2:
+			if hero is 1:
+				self.board.set_hero(0, 0, self.board.player1_button)
+			elif hero is 2:
 				self.board.set_hero_2(0, 0, self.board.player1_button2)
 			else:
 				self.board.set_hero_3(0, 0, self.board.player1_button3)
 		elif player is 2 and self.main_window.player2.gold >= 1500:
-			self.main_window.player2.avaliable_heroes.append(hero)
+			self.main_window.player2.available_heroes.append(hero)
 			self.main_window.player2.hero = hero
 			self.main_window.player2.update_gold_amount(self.main_window.player2.gold - 1500)
 			pos = [self.board.parent().width - 1, self.board.parent().height - 1]
-			if hero is 2:
+			if hero is 1:
+				self.board.set_hero(pos[0], pos[1], self.board.player2_button)
+			elif hero is 2:
 				self.board.set_hero_2(pos[0], pos[1], self.board.player2_button2)
 			else:
 				self.board.set_hero_3(pos[0], pos[1], self.board.player2_button3)
 		self._dialog.close()
 
+
 	def set_hero_one(self):
-		self.main_window.player1.hero = 1
-		self.main_window.player2.hero = 1
+		if self.main_window.turn % 2 is 0:
+			if 1 in self.main_window.player2.available_heroes:
+				self.main_window.player2.hero = 1
+			else:
+				self.buy_new_hero(2, 1)
+		else:
+			if 1 in self.main_window.player1.available_heroes:
+				self.main_window.player1.hero = 1
+			else:
+				self.buy_new_hero(1, 1)
+
 
 	def set_hero_two(self):
 		if self.main_window.turn % 2 is 0:
-			if 2 in self.main_window.player2.avaliable_heroes:
+			if 2 in self.main_window.player2.available_heroes:
 				self.main_window.player2.hero = 2
 			else:
 				self.buy_new_hero(2, 2)
 		else:
-			if 2 in self.main_window.player1.avaliable_heroes:
+			if 2 in self.main_window.player1.available_heroes:
 				self.main_window.player1.hero = 2
 			else:
 				self.buy_new_hero(1, 2)
 
+
 	def set_hero_three(self):
 		if self.main_window.turn % 2 is 0:
-			if 3 in self.main_window.player2.avaliable_heroes:
+			if 3 in self.main_window.player2.available_heroes:
 				self.main_window.player2.hero = 3
 			else:
 				self.buy_new_hero(2, 3)
 		else:
-			if 3 in self.main_window.player1.avaliable_heroes:
+			if 3 in self.main_window.player1.available_heroes:
 				self.main_window.player1.hero = 3
 			else:
 				self.buy_new_hero(1, 3)
@@ -327,3 +392,4 @@ class PlayerActions(QWidget):
 			layout.addWidget(label)
 		self._dialog.setLayout(layout)
 		self._dialog.exec_()
+
