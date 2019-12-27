@@ -7,7 +7,6 @@ from PyQt5.QtPrintSupport import *
 from player import *
 from dice import DiceRoll
 from random import randrange
-from battle import *
 
 
 class Board(QWidget):
@@ -52,7 +51,7 @@ class Board(QWidget):
 	def show_heroes(self):# na razie pokazuje tylko odpowiadających bohaterów
 		player1 = self.parent().player1
 		player2 = self.parent().player2
-		
+
 		#każdy ma od razu hero1 więc nie sprawdzam
 		#a powinnaś, bo hero1 mozna stracić ;)
 		if 1 in player1.available_heroes:
@@ -142,6 +141,7 @@ class Board(QWidget):
 
 
 	def generate_special_tiles(self):
+		self.parent().special_tiles.clear()
 		for i in range(1, self.tiles_amount):
 			if randrange(3) == 1 and i is not int(self.tiles_amount / 2):
 				self.parent().special_tiles.append(i)
@@ -184,7 +184,37 @@ class Board(QWidget):
 		str += '");'
 		button.setStyleSheet(str)
 		return button
-		
+
+
+	def get_opponent_on_tile(self, x, y):
+		#1, 2, 3 or castle
+		objects = []
+		if self.parent().turn % 2 == 1:
+			if self.parent().player2.h1pos_x == x and self.parent().player2.h1pos_y == y:
+				if 1 in self.parent().player2.available_heroes:
+					objects.append('1')
+			if self.parent().player2.h2pos_x == x and self.parent().player2.h2pos_y == y:
+				if 2 in self.parent().player2.available_heroes:
+					objects.append('2')
+			if self.parent().player2.h3pos_x == x and self.parent().player2.h3pos_y == y:
+				if 3 in self.parent().player2.available_heroes:
+					objects.append('3')
+			if self.parent().player2.castle_x == x and self.parent().player2.castle_y == y:
+				objects.append('castle')
+		else:
+			if self.parent().player1.h1pos_x == x and self.parent().player1.h1pos_y == y:
+				if 1 in self.parent().player1.available_heroes:
+					objects.append('1')
+			if self.parent().player1.h2pos_x == x and self.parent().player1.h2pos_y == y:
+				if 2 in self.parent().player1.available_heroes:
+					objects.append('2')
+			if self.parent().player1.h3pos_x == x and self.parent().player1.h3pos_y == y:
+				if 3 in self.parent().player1.available_heroes:
+					objects.append('3')		
+			if self.parent().player1.castle_x == x and self.parent().player1.castle_y == y:
+				objects.append('castle')	
+		return objects
+
 
 class mainWindow(QMainWindow):
 	def __init__(self, parent=None):

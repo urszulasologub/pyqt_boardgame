@@ -182,11 +182,25 @@ class PlayerActions(QWidget):
 			attacked = self.main_window.player2
 		else:
 			whose_turn = self.main_window.player2
-			attacked = self.main_window.player1	
+			attacked = self.main_window.player1
 		if whose_turn.hero is not None:
-			battle = Battle(whose_turn, attacked, str(whose_turn.hero), '1')
-			raport = battle.generate_battle_raport()
-			battle_dialog = BattleDialog(self, battle, whose_turn)
+			if whose_turn.hero == 1:
+				x = whose_turn.h1pos_x
+				y = whose_turn.h1pos_y
+			elif whose_turn.hero == 2:
+				x = whose_turn.h2pos_x
+				y = whose_turn.h2pos_y	
+			elif whose_turn.hero == 3:	
+				x = whose_turn.h3pos_x
+				y = whose_turn.h3pos_y
+			opponent = self.board.get_opponent_on_tile(x, y)	
+			print(opponent)
+			if opponent:	
+				battle = Battle(whose_turn, attacked, str(whose_turn.hero), opponent[0])
+				raport = battle.generate_battle_raport()
+				battle_dialog = BattleDialog(self, battle, whose_turn)
+			else:
+				print('Nie ma zadnego przeciwnika')
 
 
 	def move(self):
