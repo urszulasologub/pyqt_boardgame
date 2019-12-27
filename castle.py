@@ -43,18 +43,18 @@ class Castle(QDialog):
 		upgrade = QLabel('Ulepsz zamek za 3000 złota')
 		upgrade.setAlignment(Qt.AlignCenter)
 		self.grid.addWidget(upgrade, i, 0, 1, 3)
-		prices = ['60', '100', '400', '1000', '3000']
+		self.prices = ['60', '100', '400', '1000', '3000']
 		available = [True, True, False, False, False]
 		button = []
-		for i in range(len(prices)):
-			button.append(QPushButton('Kup jednostkę poziomu %s za %s złota' % (str(i + 1), str(prices[i]))))
+		for i in range(len(self.prices)):
+			button.append(QPushButton('Kup jednostkę poziomu %s za %s złota' % (str(i + 1), str(self.prices[i]))))
 		button[0].clicked.connect(lambda: self.buy_unit(1))
 		button[1].clicked.connect(lambda: self.buy_unit(2))
 		button[2].clicked.connect(lambda: self.buy_unit(3))
 		button[3].clicked.connect(lambda: self.buy_unit(4))
 		button[4].clicked.connect(lambda: self.buy_unit(5))
 
-		for i in range(len(prices)):
+		for i in range(len(self.prices)):
 			if available[i]:
 				self.grid.addWidget(button[i], i + 1, 1)
 				self.grid.addWidget(QPushButton('Dodaj do drużyny'), i + 1, 2)
@@ -73,7 +73,8 @@ class Castle(QDialog):
 									font: Arial;
 									min-height: 20px; """)
 		self._dialog.setWindowTitle("Kup jednostki")
-		self.curr_level = 'level_' + str(level) #potrzebuję ziennej level osobno, a nie chciałam się bawić w split
+		self.curr_level = 'level_' + str(level)
+		self.lvl = level#potrzebuję ziennej level osobno, i jako self
 		print(self.curr_level)
 
 		layout = QVBoxLayout(self._dialog)
@@ -95,6 +96,8 @@ class Castle(QDialog):
 		self.value.setAlignment(Qt.AlignCenter)
 		self.value.setText(str(1))
 
+		self.full_price = QLabel("Suma do zapłaty: %s" % self.prices[level-1])# taki napis?
+
 		hlay.addWidget(minus)
 		hlay.addWidget(self.slider)
 		hlay.addWidget(plus)
@@ -109,6 +112,7 @@ class Castle(QDialog):
 		layout.addWidget(text)
 		layout.addLayout(hlay)
 		layout.addWidget(self.value)
+		layout.addWidget(self.full_price)
 
 		layout.addWidget(buy)
 		layout.addWidget(cancel)
@@ -123,15 +127,14 @@ class Castle(QDialog):
 	def substract(self):
 		value = self.slider.value()
 		if value is not 0:
-			#tu ta zmiana co niżej opisałam
 			self.slider.setValue(value-1)
 
 	def changeValue(self, value):
-		#zmiana wartości do zakupu w jakiejś zmiennej
+		#zmiana wartości do zakupu w jakiejś zmiennej, wystarczy tylko tu
 		self.value.setText(str(value))
+		self.full_price.setText("Suma do zapłaty: %d" % (int(self.prices[self.lvl-1]) * value))
 
 	def add(self):
 		value = self.slider.value()
 		if value is not self.max_units:
-			# tu ta zmiana co wyżej opisałam
 			self.slider.setValue(value+1)
