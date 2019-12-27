@@ -113,6 +113,19 @@ class Board(QWidget):
 		self.board.addWidget(self.parent().player2, 1, 1, self.parent().height - 2, self.parent().width / 2 - 1)# najpier dodaje oba, a pożniej chowam i pokazuje w zależności od tury
 		self.board.addWidget(self.parent().player1, 1, 1, self.parent().height - 2, self.parent().width / 2 - 1)
 
+		if self.parent().update_units:
+			self.parent().update_units = False
+			available = self.parent().player1.available_units
+			i = 0
+			for level in available:
+				if self.parent().player1.castle.available[i]:
+					self.parent().player1.available_units[level] += 10
+				if self.parent().player2.castle.available[i]:
+					self.parent().player2.available_units[level] += 10
+				self.parent().player1.castle.update_unit_labels()
+				self.parent().player2.castle.update_unit_labels()
+				i += 1
+
 		if self.parent().turn % 2 is 0:
 			self.player_info = self.parent().player2
 			self.parent().player1.hide()
@@ -120,6 +133,7 @@ class Board(QWidget):
 			self.parent().day += 1
 			if self.parent().day % 7 is 1:
 				self.parent().week += 1
+				self.parent().update_units = True
 		else:
 			self.player_info = self.parent().player1 #player_info nadal jest potrzebne, bo jest używane w innych miejscach w kodzie
 			self.parent().player2.hide()
@@ -182,8 +196,9 @@ class mainWindow(QMainWindow):
 		super(mainWindow, self).__init__(parent)
 
 		self.week = 1
-		self.day = 1
+		self.day = 6#do testu
 		self.turn = 1
+		self.update_units = False
 
 		self.width = 15
 		self.height = 10

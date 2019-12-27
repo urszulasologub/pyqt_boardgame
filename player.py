@@ -59,9 +59,9 @@ class PlayerInfo(QWidget):
 		self.available_units = {
 			"level_1": 10,
 			"level_2": 5,
-			"level_3": 5,
-			"level_4": 5,
-			"level_5": 5
+			"level_3": 0,
+			"level_4": 0,
+			"level_5": 0
 		}# powiedzmy, że od razu może kupić 5, poza poziomem 1
 
 		super(PlayerInfo, self).__init__(parent)
@@ -78,6 +78,7 @@ class PlayerInfo(QWidget):
 				font: Arial;
 			""" % color)
 		self.grid = QGridLayout(self)
+		self.castle = Castle(self)
 		castle_image = QPushButton()
 		castle_image.setStyleSheet('border-image: url(UI/castle_inside); min-height: 200px; ')
 		castle_image.clicked.connect(self.show_castle)
@@ -96,8 +97,7 @@ class PlayerInfo(QWidget):
 		#self.update_week_day()
 
 	def show_castle(self):
-		castle = Castle(self)
-		castle.exec_()
+		self.castle.show_castle()
 
 	def update_castle_level(self, level):
 		self.castle_level = level
@@ -147,6 +147,7 @@ class PlayerActions(QWidget):
 			self.buttons.append(QPushButton(self.labels[i]))
 			self.grid.addWidget(self.buttons[i], i, 0)
 
+		self.buttons[0].clicked.connect(self.show_team)
 		self.buttons[1].clicked.connect(self.change_turn)
 		self.buttons[3].clicked.connect(self.set_hero_one)
 		self.buttons[4].clicked.connect(self.set_hero_two)
@@ -290,3 +291,39 @@ class PlayerActions(QWidget):
 			else:
 				self.buy_new_hero(1, 3)
 
+	def show_team(self):
+		self._dialog = QDialog()
+		self._dialog.setStyleSheet("""
+								background-image: url(UI/brown_background.jpg);
+								background-attachment: scroll;
+								border: 2px outset gray;
+								border-radius: 10px;
+								color: white;
+								font-size: 14pt;
+								font: Arial;
+								min-height: 20px;
+							""")
+		self._dialog.setWindowTitle('Drużyna')
+		if self.main_window.turn % 2 is 0:
+			player = self.main_window.player2
+			hero = self.main_window.player2.hero
+		else:
+			player = self.main_window.player1
+			hero = self.main_window.player1.hero
+		if hero is 1:
+			units = player.h1units
+		elif hero is 2:
+			units = player.h2units
+		else:
+			units = player.h3units
+		layout = QVBoxLayout()
+		labels = [QLabel('Drużyna bohatera %d' % hero),
+				  QLabel('Jednostki poziomu 1: %d' % units['level_1']),
+				  QLabel('Jednostki poziomu 2: %d' % units['level_2']),
+				  QLabel('Jednostki poziomu 3: %d' % units['level_3']),
+				  QLabel('Jednostki poziomu 4: %d' % units['level_4']),
+				  QLabel('Jednostki poziomu 5: %d' % units['level_5'])]
+		for label in labels:
+			layout.addWidget(label)
+		self._dialog.setLayout(layout)
+		self._dialog.exec_()
