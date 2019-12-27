@@ -8,9 +8,9 @@ class Castle(QDialog):
 	def __init__(self, parent):
 		super(Castle, self).__init__(parent)
 		self._dialog = QDialog(self)
-		self.setWindowTitle("Zamek")
+		self._dialog.setWindowTitle("Zamek")
 
-		self.setStyleSheet("""
+		self._dialog.setStyleSheet("""
 				background-image: url(UI/brown_background.jpg);
 				background-attachment: scroll;
 				border: 2px outset gray;
@@ -187,59 +187,71 @@ class Castle(QDialog):
 			self.slider_buy.setValue(value+1)
 
 	def add_to_team(self, level):
-		self.curr_level = 'level_' + str(level)
-		self.max_units = self.parent().in_castle_units[self.curr_level]
-		if self.max_units is not 0:
-			self._dialog_team = QDialog()
-			self._dialog_team.setStyleSheet("""
-										background-image: url(UI/brown_background.jpg);
-										background-attachment: scroll;
-										border: 2px outset gray;
-										border-radius: 10px;
-										color: white;
-										font-size: 14pt;
-										font: Arial;
-										min-height: 20px; """)
-			self._dialog_team.setWindowTitle("Dodaj jednostki do drużyny")
-			layout = QVBoxLayout(self._dialog_team)
-			text = QLabel("Ile jednostek chcesz dodać?")
+		x, y = self.parent().castle_x, self.parent().castle_y
+		hero = self.parent().hero
+		check = False
+		if hero is 1 and self.parent().h1pos_x is x and self.parent().h1pos_y is y:
+			check = True
+		elif hero is 2 and self.parent().h2pos_x is x and self.parent().h2pos_y is y:
+			check = True
+		elif hero is 3 and self.parent().h3pos_x is x and self.parent().h3pos_y is y:
+			check = True
+		if check:
+			self.curr_level = 'level_' + str(level)
+			self.max_units = self.parent().in_castle_units[self.curr_level]
+			if self.max_units is not 0:
+				self._dialog_team = QDialog()
+				self._dialog_team.setStyleSheet("""
+											background-image: url(UI/brown_background.jpg);
+											background-attachment: scroll;
+											border: 2px outset gray;
+											border-radius: 10px;
+											color: white;
+											font-size: 14pt;
+											font: Arial;
+											min-height: 20px; """)
+				self._dialog_team.setWindowTitle("Dodaj jednostki do drużyny")
+				layout = QVBoxLayout(self._dialog_team)
+				text = QLabel("Ile jednostek chcesz dodać?")
 
-			hlay = QHBoxLayout()
-			minus = QPushButton('-')
-			minus.setStyleSheet("min-width: 20px; max-width: 20px;")
-			minus.clicked.connect(self.substract_team)
-			self.slider_team = QSlider(Qt.Horizontal)
-			self.slider_team.setValue(1)
-			self.slider_team.setMaximum(self.max_units)
-			self.slider_team.valueChanged[int].connect(self.changeValue_team)
-			plus = QPushButton('+')
-			plus.setStyleSheet("min-width: 20px; max-width: 20px;")
-			plus.clicked.connect(self.add_team)
-			self.value = QLabel()
-			self.value.setAlignment(Qt.AlignCenter)
-			self.value.setText(str(1))
+				hlay = QHBoxLayout()
+				minus = QPushButton('-')
+				minus.setStyleSheet("min-width: 20px; max-width: 20px;")
+				minus.clicked.connect(self.substract_team)
+				self.slider_team = QSlider(Qt.Horizontal)
+				self.slider_team.setValue(1)
+				self.slider_team.setMaximum(self.max_units)
+				self.slider_team.valueChanged[int].connect(self.changeValue_team)
+				plus = QPushButton('+')
+				plus.setStyleSheet("min-width: 20px; max-width: 20px;")
+				plus.clicked.connect(self.add_team)
+				self.value = QLabel()
+				self.value.setAlignment(Qt.AlignCenter)
+				self.value.setText(str(1))
 
-			hlay.addWidget(minus)
-			hlay.addWidget(self.slider_team)
-			hlay.addWidget(plus)
+				hlay.addWidget(minus)
+				hlay.addWidget(self.slider_team)
+				hlay.addWidget(plus)
 
-			team = QPushButton()
-			team.setText("Dodaj")
-			team.clicked.connect(self.team)
-			cancel = QPushButton()
-			cancel.setText("Anuluj")
-			cancel.clicked.connect(self._dialog_team.close)
+				team = QPushButton()
+				team.setText("Dodaj")
+				team.clicked.connect(self.team)
+				cancel = QPushButton()
+				cancel.setText("Anuluj")
+				cancel.clicked.connect(self._dialog_team.close)
 
-			layout.addWidget(text)
-			layout.addLayout(hlay)
-			layout.addWidget(self.value)
+				layout.addWidget(text)
+				layout.addLayout(hlay)
+				layout.addWidget(self.value)
 
-			layout.addWidget(team)
-			layout.addWidget(cancel)
-			self._dialog_team.setLayout(layout)
-			self._dialog_team.exec_()
+				layout.addWidget(team)
+				layout.addWidget(cancel)
+				self._dialog_team.setLayout(layout)
+				self._dialog_team.exec_()
+			else:
+				print("Brak dostępnych jednostek do dodania")
 		else:
-			print("Brak dostępnych jednostek do dodania")
+			print("Musisz być w zamku aby przenieść jednostki")
 
 	def team(self):
 		mainWindow = self.parent().parent().parent()
