@@ -7,10 +7,13 @@ from PyQt5.QtPrintSupport import *
 from dice import DiceRoll
 from castle import Castle
 import math
+from battle import *
 
 
 class PlayerInfo(QWidget):
-	def __init__(self, parent, player):
+	def __init__(self, parent, player, castle_x, castle_y):
+		self.castle_x = castle_x
+		self.castle_y = castle_y
 		self.castle_level = 1
 		self.gold = 0
 		self.dice = 0
@@ -130,14 +133,14 @@ class PlayerInfo(QWidget):
 
 	def clear_hero_pos(self, hero_num):
 		if hero_num == 1:
-			self.h1pos_x = 0
-			self.h1pos_y = 0
+			self.h1pos_x = self.castle_x
+			self.h1pos_y = self.castle_y
 		elif hero_num == 2:
-			self.h2pos_x = 0
-			self.h2pos_y = 0
+			self.h2pos_x = self.castle_x
+			self.h2pos_y = self.castle_y
 		else:
-			self.h3pos_x = 0
-			self.h3pos_y = 0
+			self.h3pos_x = self.castle_x
+			self.h3pos_y = self.castle_y
 
 #akcje zawsze są te same, więc nie potrzeba podawać gracza
 class PlayerActions(QWidget):
@@ -165,11 +168,26 @@ class PlayerActions(QWidget):
 			self.grid.addWidget(self.buttons[i], i, 0)
 
 		self.buttons[1].clicked.connect(self.change_turn)
+		self.buttons[2].clicked.connect(self.start_combat)
 		self.buttons[3].clicked.connect(self.set_hero_one)
 		self.buttons[4].clicked.connect(self.set_hero_two)
 		self.buttons[5].clicked.connect(self.set_hero_three)
 		self.buttons[6].clicked.connect(self.move)
 		self.setLayout(self.grid)
+
+
+	def start_combat(self):
+		if self.main_window.turn % 2 is 1:
+			whose_turn = self.main_window.player1
+			attacked = self.main_window.player2
+		else:
+			whose_turn = self.main_window.player2
+			attacked = self.main_window.player1	
+		if whose_turn.hero is not None:
+			battle = Battle(whose_turn, attacked, str(whose_turn.hero), '1')
+			raport = battle.generate_battle_raport()
+			battle_dialog = BattleDialog(self, battle, whose_turn)
+
 
 	def move(self):
 		if self.main_window.turn % 2 is 0:

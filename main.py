@@ -194,15 +194,15 @@ class mainWindow(QMainWindow):
 		self.height = 10
 
 		self.board = QGridLayout(self) # nie wiem czemu ale musi być tu inaczej jak 2 raz musi wyświetlić pierwszego gracza to się psuje ;(
-		self.player1 = PlayerInfo(self, 'Gracz 1')
-		self.player2 = PlayerInfo(self, 'Gracz 2')
+		self.player1 = PlayerInfo(self, 'Gracz 1', 0, 0)
+		self.player2 = PlayerInfo(self, 'Gracz 2', self.width - 1, self.height - 1)
 		self.roll_dice()
 
 		self.special_tiles = [] #po to by się nie aktualizowało za wcześnie
 
 		self.board_widget = Board(self)
 		self.setCentralWidget(self.board_widget)
-		self.setWindowTitle("Board game")
+		self.setWindowTitle('Heroes of Might and Magic: Gra planszowa')
 		#self.showFullScreen()
 		self.move(0, 0)
 
@@ -210,14 +210,6 @@ class mainWindow(QMainWindow):
 				background-image: url(./UI/map_visual.png);
 				background-attachment: scroll;
 			""")
-
-		#for battle debugging:
-		battle = Battle(self.player1, self.player2, '1', '1')
-		raport = battle.generate_battle_raport()
-		print(raport)
-		print(self.player1.h1units)
-		print(self.player2.h1units)
-		battle_dialog = BattleDialog(self, battle, self.player1)
 
 
 	def show_info(self):

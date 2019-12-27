@@ -13,8 +13,7 @@ class Battle():
 		#attacking player always starts battle
 		attacking_dict = {'1': self.attacking_player.h1units,
 					'2': self.attacking_player.h2units,
-					'3': self.attacking_player.h3units,
-					'castle': self.attacking_player.in_castle_units }
+					'3': self.attacking_player.h3units } #castle cannot be an attacking side
 		attacked_dict = {'1': self.attacked_player.h1units,
 					'2': self.attacked_player.h2units,
 					'3': self.attacked_player.h3units,
@@ -68,8 +67,9 @@ class Battle():
 		else:
 			loser_player.in_castle_units = result_dict
 		if hero is not 'castle':
-			loser_player.available_heroes.remove(int(hero))
-			loser_player.clear_hero_pos(int(hero))
+			if int(hero) in loser_player.available_heroes:
+				loser_player.available_heroes.remove(int(hero))
+				loser_player.clear_hero_pos(int(hero))
 			if loser_player.available_heroes:
 				loser_player.hero = loser_player.available_heroes[0]
 			else:
@@ -112,7 +112,7 @@ class Battle():
 						break
 
 		self.raport += '\nBilans walki:\n'
-		if self.health(attacked_health) > 0:
+		if self.health(attacking_health) > 0:
 			self.winner = self.attacking_player
 			self.raport += 'Wygrał gracz atakujący.\n'
 			self.hero = self.hero1
@@ -231,6 +231,13 @@ class BattleDialog(QDialog):
 			grid.addWidget(label)
 
 		message = QLabel(self.raport)
+		message.setStyleSheet("""
+				color: white;
+				font-size: 10pt;
+				font: Arial;
+				min-height: 15px;
+				min-width: 450px;
+			""")
 
 		self.scrollArea = QScrollArea(self)
 		self.scrollArea.setWidgetResizable(False)
