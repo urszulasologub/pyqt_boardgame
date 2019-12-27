@@ -217,7 +217,7 @@ class mainWindow(QMainWindow):
 		print(raport)
 		print(self.player1.h1units)
 		print(self.player2.h1units)
-		battle_dialog = BattleDialog(self, raport)
+		battle_dialog = BattleDialog(self, battle, self.player1)
 
 
 	def show_info(self):

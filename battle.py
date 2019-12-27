@@ -196,15 +196,17 @@ class Battle():
 		return health
 				
 
+	def return_winner(self):
+		return self.winner
+
+
 class BattleDialog(QDialog):
-	def __init__(self, parent, raport):
+	def __init__(self, parent, battle, whose_turn):
 		super(BattleDialog, self).__init__(parent)
-		self.raport = raport
+		self.raport = battle.raport
 		self._dialog = QDialog(self)
-		self.setWindowTitle("Walka")
 		self.setStyleSheet("""
 				background-image: url(UI/brown_background.jpg);
-				background-attachment: scroll;
 				border: 2px outset gray;
 				border-radius: 10px;
 				color: white;
@@ -213,9 +215,22 @@ class BattleDialog(QDialog):
 				min-height: 15px;
 			""")
 		grid = QGridLayout(self)
+		if whose_turn == battle.winner:
+			self.setWindowTitle('Zwycięstwo')
+			label = QLabel(self)
+			pixmap = QPixmap('UI/win.png')
+			pixmap = pixmap.scaledToWidth(450)
+			label.setPixmap(pixmap)
+			grid.addWidget(label)
+		else:
+			self.setWindowTitle('Przegrana')
+			label = QLabel(self)
+			pixmap = QPixmap('UI/lose.png')
+			pixmap = pixmap.scaledToWidth(450)
+			label.setPixmap(pixmap)
+			grid.addWidget(label)
 
-		message = QLabel(raport)
-		#grid.addWidget(message)
+		message = QLabel(self.raport)
 
 		self.scrollArea = QScrollArea(self)
 		self.scrollArea.setWidgetResizable(False)
@@ -226,7 +241,6 @@ class BattleDialog(QDialog):
 		ok = QPushButton('OK')
 		ok.clicked.connect(lambda: self.close())
 		grid.addWidget(ok)
-
 
 		self.setLayout(grid)
 
