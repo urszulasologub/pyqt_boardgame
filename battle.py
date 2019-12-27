@@ -1,12 +1,9 @@
 import os, sys
-
+import math
+from random import randrange
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from PyQt5.QtPrintSupport import *
-from player import *
-from dice import DiceRoll
-from random import randrange
 
 
 class Battle():
@@ -44,8 +41,6 @@ class Battle():
 		}
 
 
-
-
 	def update_winner(self, winner_player, hero, result_dict):
 		if hero == '1':
 			winner_player.h1units = result_dict
@@ -57,9 +52,10 @@ class Battle():
 			winner_player.in_castle_units = result_dict
 
 
+	#must come back to default values, because this hero will be available for buying now
 	def update_loser(self, loser_player, hero):
-		result_dict = {'level_1': 0,
-					'level_2': 0,
+		result_dict = {'level_1': 15,
+					'level_2': 10,
 					'level_3': 0,
 					'level_4': 0,
 					'level_5': 0}
@@ -71,6 +67,13 @@ class Battle():
 			loser_player.h3units = result_dict
 		else:
 			loser_player.in_castle_units = result_dict
+		if hero is not 'castle':
+			loser_player.available_heroes.remove(int(hero))
+			loser_player.clear_hero_pos(int(hero))
+			if loser_player.available_heroes:
+				loser_player.hero = loser_player.available_heroes[0]
+			else:
+				loser_player.hero = None
 
 
 	def generate_battle_raport(self):
@@ -193,11 +196,41 @@ class Battle():
 		return health
 				
 
+class BattleDialog(QDialog):
+	def __init__(self, parent, raport):
+		super(BattleDialog, self).__init__(parent)
+		self.raport = raport
+		self._dialog = QDialog(self)
+		self.setWindowTitle("Walka")
+		self.setStyleSheet("""
+				background-image: url(UI/brown_background.jpg);
+				background-attachment: scroll;
+				border: 2px outset gray;
+				border-radius: 10px;
+				color: white;
+				font-size: 10pt;
+				font: Arial;
+				min-height: 15px;
+			""")
+		grid = QGridLayout(self)
 
+		message = QLabel(raport)
+		#grid.addWidget(message)
 
-
+		self.scrollArea = QScrollArea(self)
+		self.scrollArea.setWidgetResizable(False)
+		self.scrollAreaWidgetContents = message
+		self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+		grid.addWidget(self.scrollArea)
 		
+		ok = QPushButton('OK')
+		ok.clicked.connect(lambda: self.close())
+		grid.addWidget(ok)
 
+
+		self.setLayout(grid)
+
+		self.exec_()
 	
 
 

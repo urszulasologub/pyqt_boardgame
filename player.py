@@ -21,7 +21,7 @@ class PlayerInfo(QWidget):
 		self.h3pos_x = 0
 		self.h3pos_y = 0
 		self.hero = 1# to którym obecnie bohaterem się porusza
-		self.avaliable_heroes = [1]
+		self.available_heroes = [1]
 		self.can_move = False
 
 		self.h1units = {
@@ -95,9 +95,11 @@ class PlayerInfo(QWidget):
 		self.update_gold_amount(5000)
 		#self.update_week_day()
 
+
 	def show_castle(self):
 		castle = Castle(self)
 		castle.exec_()
+
 
 	def update_castle_level(self, level):
 		self.castle_level = level
@@ -105,11 +107,13 @@ class PlayerInfo(QWidget):
 		self.labels[1] = QLabel(text)
 		self.grid.addWidget(self.labels[1], 2, 0)
 
+
 	def update_gold_amount(self, amount):
 		self.gold = amount
 		text = 'Złoto: ' + str(amount)
 		self.labels[2] = QLabel(text)
 		self.grid.addWidget(self.labels[2], 3, 0)
+
 
 	def update_dice_amount(self, amount):
 		self.dice = amount
@@ -117,10 +121,23 @@ class PlayerInfo(QWidget):
 		self.labels[3] = QLabel(text)
 		self.grid.addWidget(self.labels[3], 4, 0)
 
+
 	def update_week_day(self, week, day): # z jakiegoś powodu, jak się używa parent() to wywala cały program
 		text = 'Tydzień: ' + str(week) + ', Dzień: ' + str(day)
 		self.labels[4] = QLabel(text)
 		self.grid.addWidget(self.labels[4], 5, 0)
+
+
+	def clear_hero_pos(self, hero_num):
+		if hero_num == 1:
+			self.h1pos_x = 0
+			self.h1pos_y = 0
+		elif hero_num == 2:
+			self.h2pos_x = 0
+			self.h2pos_y = 0
+		else:
+			self.h3pos_x = 0
+			self.h3pos_y = 0
 
 #akcje zawsze są te same, więc nie potrzeba podawać gracza
 class PlayerActions(QWidget):
@@ -234,7 +251,7 @@ class PlayerActions(QWidget):
 
 	def buy(self, player, hero):
 		if player is 1 and self.main_window.player1.gold >= 1500:
-			self.main_window.player1.avaliable_heroes.append(hero)
+			self.main_window.player1.available_heroes.append(hero)
 			self.main_window.player1.hero = hero
 			self.main_window.player1.update_gold_amount(self.main_window.player1.gold - 1500)
 			if hero is 2:#powinno ci pozwolić od razu kupić bohatera 3, bez konieczności posiadania najpierw 2
@@ -242,7 +259,7 @@ class PlayerActions(QWidget):
 			else:
 				self.board.set_hero_3(0, 0, self.board.player1_button3)
 		elif player is 2 and self.main_window.player2.gold >= 1500:
-			self.main_window.player2.avaliable_heroes.append(hero)
+			self.main_window.player2.available_heroes.append(hero)
 			self.main_window.player2.hero = hero
 			self.main_window.player2.update_gold_amount(self.main_window.player2.gold - 1500)
 			pos = [self.board.parent().width - 1, self.board.parent().height - 1]
@@ -258,25 +275,26 @@ class PlayerActions(QWidget):
 
 	def set_hero_two(self):
 		if self.main_window.turn % 2 is 0:
-			if 2 in self.main_window.player2.avaliable_heroes:
+			if 2 in self.main_window.player2.available_heroes:
 				self.main_window.player2.hero = 2
 			else:
 				self.buy_new_hero(2, 2)
 		else:
-			if 2 in self.main_window.player1.avaliable_heroes:
+			if 2 in self.main_window.player1.available_heroes:
 				self.main_window.player1.hero = 2
 			else:
 				self.buy_new_hero(1, 2)
 
 	def set_hero_three(self):
 		if self.main_window.turn % 2 is 0:
-			if 3 in self.main_window.player2.avaliable_heroes:
+			if 3 in self.main_window.player2.available_heroes:
 				self.main_window.player2.hero = 3
 			else:
 				self.buy_new_hero(2, 3)
 		else:
-			if 3 in self.main_window.player1.avaliable_heroes:
+			if 3 in self.main_window.player1.available_heroes:
 				self.main_window.player1.hero = 3
 			else:
 				self.buy_new_hero(1, 3)
+
 
