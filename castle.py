@@ -11,14 +11,18 @@ class Castle(QDialog):
 		self._dialog.setWindowTitle("Zamek")
 
 		self._dialog.setStyleSheet("""
-				background-image: url(UI/brown_background.jpg);
-				background-attachment: scroll;
-				border: 2px outset gray;
-				border-radius: 10px;
-				color: white;
-				font-size: 14pt;
-				font: Arial;
-				min-height: 20px;
+			QDialog, QLabel, QPushButton {
+			background-image: url(UI/brown_background.jpg);
+			background-attachment: scroll;
+			border: 2px outset gray;
+			border-radius: 10px;
+			color: white;
+			font-size: 18pt;
+			font: Arial;
+			min-height: 15px;}
+			
+			QPushButton:pressed {
+			background-image: url(UI/darker_brown_background.jpg);}
 			""")
 
 		self.grid = QGridLayout(self)
@@ -105,14 +109,19 @@ class Castle(QDialog):
 		if self.max_units is not 0:
 			self._dialog_buy = QDialog()
 			self._dialog_buy.setStyleSheet("""
-										background-image: url(UI/brown_background.jpg);
-										background-attachment: scroll;
-										border: 2px outset gray;
-										border-radius: 10px;
-										color: white;
-										font-size: 14pt;
-										font: Arial;
-										min-height: 20px; """)
+				QDialog, QLabel, QPushButton {
+				background-image: url(UI/brown_background.jpg);
+				background-attachment: scroll;
+				border: 2px outset gray;
+				border-radius: 10px;
+				color: white;
+				font-size: 18pt;
+				font: Arial;
+				min-height: 15px;}
+				
+				QPushButton:pressed {
+				background-image: url(UI/darker_brown_background.jpg);}
+				""")
 			self._dialog_buy.setWindowTitle("Kup jednostki")
 			layout = QVBoxLayout(self._dialog_buy)
 			text = QLabel("Ile jednostek chcesz kupić?")
@@ -202,14 +211,19 @@ class Castle(QDialog):
 			if self.max_units is not 0:
 				self._dialog_team = QDialog()
 				self._dialog_team.setStyleSheet("""
-											background-image: url(UI/brown_background.jpg);
-											background-attachment: scroll;
-											border: 2px outset gray;
-											border-radius: 10px;
-											color: white;
-											font-size: 14pt;
-											font: Arial;
-											min-height: 20px; """)
+					QDialog, QLabel, QPushButton {
+					background-image: url(UI/brown_background.jpg);
+					background-attachment: scroll;
+					border: 2px outset gray;
+					border-radius: 10px;
+					color: white;
+					font-size: 18pt;
+					font: Arial;
+					min-height: 15px;}
+					
+					QPushButton:pressed {
+					background-image: url(UI/darker_brown_background.jpg);}
+					""")
 				self._dialog_team.setWindowTitle("Dodaj jednostki do drużyny")
 				layout = QVBoxLayout(self._dialog_team)
 				text = QLabel("Ile jednostek chcesz dodać?")

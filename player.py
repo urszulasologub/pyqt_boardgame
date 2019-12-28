@@ -73,13 +73,18 @@ class PlayerInfo(QWidget):
 		if player == 'Gracz 1':
 			color = 'darkred'
 		self.setStyleSheet("""
-				background-image: url(UI/brown_background.jpg);
-				background-attachment: scroll;
-				border: 2px outset %s;
-				border-radius: 10px;
-				color: white;
-				font-size: 18pt;
-				font: Arial;
+			QDialog, QLabel, QPushButton {
+			background-image: url(UI/brown_background.jpg);
+			background-attachment: scroll;
+			border: 2px outset %s;
+			border-radius: 10px;
+			color: white;
+			font-size: 18pt;
+			font: Arial;
+			min-height: 15px;}
+			
+			QPushButton:pressed {
+			background-image: url(UI/darker_brown_background.jpg);}
 			""" % color)
 		self.grid = QGridLayout(self)
 		self.castle = Castle(self)
@@ -150,14 +155,18 @@ class PlayerActions(QWidget):
 		self.main_window = self.parent().parent()
 		self.board = self.parent()
 		self.setStyleSheet("""
-				background-image: url(UI/brown_background.jpg);
-				background-attachment: scroll;
-				border: 2px outset gray;
-				border-radius: 10px;
-				color: white;
-				font-size: 18pt;
-				font: Arial;
-				min-height: 50px;
+			QDialog, QLabel, QPushButton {
+			background-image: url(UI/brown_background.jpg);
+			background-attachment: scroll;
+			border: 2px outset gray;
+			border-radius: 10px;
+			color: white;
+			font-size: 18pt;
+			font: Arial;
+			min-height: 15px;}
+			
+			QPushButton:pressed {
+			background-image: url(UI/darker_brown_background.jpg);}
 			""")
 
 		self.grid = QGridLayout(self)
@@ -331,15 +340,19 @@ class PlayerActions(QWidget):
 	def buy_new_hero(self, player, hero):
 		self._dialog = QDialog()
 		self._dialog.setStyleSheet("""
-						background-image: url(UI/brown_background.jpg);
-						background-attachment: scroll;
-						border: 2px outset gray;
-						border-radius: 10px;
-						color: white;
-						font-size: 14pt;
-						font: Arial;
-						min-height: 20px;
-					""")
+			QDialog, QLabel, QPushButton {
+			background-image: url(UI/brown_background.jpg);
+			background-attachment: scroll;
+			border: 2px outset gray;
+			border-radius: 10px;
+			color: white;
+			font-size: 18pt;
+			font: Arial;
+			min-height: 15px;}
+			
+			QPushButton:pressed {
+			background-image: url(UI/darker_brown_background.jpg);}
+			""")
 		self._dialog.setWindowTitle("Kup bohatera")
 		layout = QVBoxLayout(self._dialog)#tymczasowo
 		text = QLabel()
@@ -424,15 +437,19 @@ class PlayerActions(QWidget):
 	def show_team(self):
 		self._dialog = QDialog()
 		self._dialog.setStyleSheet("""
-								background-image: url(UI/brown_background.jpg);
-								background-attachment: scroll;
-								border: 2px outset gray;
-								border-radius: 10px;
-								color: white;
-								font-size: 14pt;
-								font: Arial;
-								min-height: 20px;
-							""")
+			QDialog, QLabel, QPushButton {
+			background-image: url(UI/brown_background.jpg);
+			background-attachment: scroll;
+			border: 2px outset gray;
+			border-radius: 10px;
+			color: white;
+			font-size: 18pt;
+			font: Arial;
+			min-height: 15px;}
+			
+			QPushButton:pressed {
+			background-image: url(UI/darker_brown_background.jpg);}
+			""")
 		self._dialog.setWindowTitle('Drużyna')
 		if self.main_window.turn % 2 is 0:
 			player = self.main_window.player2
