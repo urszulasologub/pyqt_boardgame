@@ -212,15 +212,22 @@ class PlayerActions(QWidget):
 			hero = self.main_window.player1.hero
 			player = self.main_window.player1
 
-		if player.can_move:
-			self.move_hero(player, hero, self.main_window.height, self.main_window.width)
+		if player.can_move and hero is not None:
+			tile = self.move_hero(player, hero, self.main_window.height, self.main_window.width)
 			player.can_move = False
 			#Zmienić wartoś nowej zmiennej, że już się ruszył
 			self.main_window.show_info()
+			for special_location in self.main_window.special_locations:
+				print(tile, special_location)
+				if tile == special_location:
+					print('\n\n\n\n\nPole specjalne!\n\n\n\n')
+					break
 		else:# zmieni się na jakiś dialog czy coś
 			print("Już się ruszyłeś w tej turze")
 
 	def move_hero(self, player, hero, height, width):
+		x = None
+		y = None
 		if hero is 1:# muszę w ten sposób, z dodatkowa zmienna na player.h1pos_x itd, nie działa
 			#print("=====")
 			for i in range(player.dice):  # pętli, żeby nie wyszło za przedział
@@ -236,6 +243,8 @@ class PlayerActions(QWidget):
 				elif player.h1pos_x is width - 1 and player.h1pos_y in range(height):
 					#print("dol")
 					player.h1pos_y += 1
+			x = player.h1pos_x
+			y = player.h1pos_y
 		elif hero is 2:
 			for i in range(player.dice):
 				if player.h2pos_x in range(width - 1) and player.h2pos_y is 0:
@@ -246,16 +255,25 @@ class PlayerActions(QWidget):
 					player.h2pos_x -= 1
 				elif player.h2pos_x is width - 1 and player.h2pos_y in range(height):
 					player.h2pos_y += 1
+			x = player.h2pos_x
+			y = player.h2pos_y
 		else:
 			for i in range(player.dice):
 				if player.h3pos_x in range(width - 1) and player.h3pos_y is 0:
 					player.h3pos_x += 1
+					x = player.h3pos_x
 				elif player.h3pos_x is 0 and player.h3pos_y in range(width - 1):
 					player.h3pos_y -= 1
+					y = player.h3pos_y
 				elif player.h3pos_x in range(width) and player.h3pos_y is height - 1:
 					player.h3pos_x -= 1
+					x = player.h3pos_x 
 				elif player.h3pos_x is width - 1 and player.h3pos_y in range(height):
 					player.h3pos_y += 1
+					y = player.h3pos_y
+			x = player.h3pos_x
+			y = player.h3pos_y
+		return (x, y)
 
 	def change_turn(self):
 		self.main_window.turn += 1

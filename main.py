@@ -152,16 +152,17 @@ class Board(QWidget):
 		for i in range(self.tiles_amount): #shows special tiles every turn
 			if i in self.parent().special_tiles:
 				self.set_button_stylesheet(self.buttons[i], 'objects/treasure.png')
-				location = self.parent().board.getItemPosition(i)
-				print(i, location[:2])
 
 
 	def generate_special_tiles(self):
 		self.parent().special_tiles.clear()
+		self.parent().special_locations.clear()
 		for i in range(1, self.tiles_amount):
 			if randrange(3) == 1 and i is not int(self.tiles_amount / 2):
 				self.parent().special_tiles.append(i)
 				self.set_button_stylesheet(self.buttons[i], 'objects/treasure.png')
+				location = self.parent().board.getItemPosition(i)
+				self.parent().special_locations.append((location[1], location[0]))
 
 
 	def set_hero(self, x, y, which_one):
@@ -250,6 +251,7 @@ class mainWindow(QMainWindow):
 		self.roll_dice()
 
 		self.special_tiles = [] #po to by się nie aktualizowało za wcześnie
+		self.special_locations = []
 
 		self.board_widget = Board(self)
 		self.setCentralWidget(self.board_widget)
