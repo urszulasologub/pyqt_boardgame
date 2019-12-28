@@ -228,46 +228,80 @@ class PlayerActions(QWidget):
 			print("Już się ruszyłeś w tej turze")
 
 
-	def handle_special_tile(self, player, hero, location):
-		situations = { 'easy_fight': self.random_fight(player, hero, 'easy', location),
-					'medium_fight': 'medium_fight',
-					'hard_fight': 'hard_fight',
-					'small_prize': 'small_prize',
-					'medium_prize': 'medium_prize',
-					'big_prize': 'big_prize' }		
+	def handle_special_tile(self, player, hero, location):	
 		rand = randrange(1, 101)
+		print(rand)
 		if rand < 28:
-			situation = situations['easy_fight']
+			self.random_fight(player, hero, 'easy', location)
+			print('Łatwa walka')
 		elif rand < 65:
-			situation = situations['small_prize']
+			print('Mała nagroda')
 		elif rand < 80:
-			situation = situations['medium_fight']
+			self.random_fight(player, hero, 'medium', location)
+			print('Średnia walka')
 		elif rand < 95:
-			situation = situations['medium_prize']
+			print('Średnia nagroda')
 		elif rand < 98:
-			situation = situations['big_prize']
+			print('Duza nagroda')
 		else:
-			situation = situations['hard_fight']
+			self.random_fight(player, hero, 'hard', location)
+			print('Trudna walka')
 
-		print(situation)
 		
 
 	def random_fight(self, player, hero, level, location):
 		bot = PlayerInfo(self.main_window, 'bot', None, None)
 		bot.h1pos_x = location[0]
 		bot.h2pos_x = location[1]
-		multiplier = self.main_window.week
 		if level == 'easy':
+			multiplier = self.main_window.week
+			level_3 = randrange(5)
+			if self.main_window.week < 5:
+				level_3 = 0
 			bot.h1units = {
 				'level_1': int(randrange(10) * multiplier),
 				'level_2': int(randrange(2) * multiplier),
-				'level_3': 0,
+				'level_3': level_3,
 				'level_4': 0,
 				'level_5': 0
+			}
+		elif level == 'medium':
+			multiplier = self.main_window.week * 1.5
+			level_3 = randrange(2)
+			level_4 = randrange(1) * multiplier
+			if self.main_window.week < 3:
+				level_3 = 0
+			if self.main_window.week < 6:
+				level_4 = 0
+			bot.h1units = {
+				'level_1': int(randrange(10) * multiplier),
+				'level_2': int(randrange(5) * multiplier),
+				'level_3': int(level_3 * multiplier),
+				'level_4': int(level_4),
+				'level_5': 0
+			}
+		else:
+			if self.main_window.week < 3:
+				level_4 = 0
+				multiplier = 0.5
+			else:
+				multiplier = self.main_window.week * 2
+				level_4 = randrange(3)
+				level_5 = randrange(2) * 0.25
+			if self.main_window.week < 5:	
+				level_5 = 0
+			bot.h1units = {
+				'level_1': int(randrange(50) * multiplier),
+				'level_2': int(randrange(30) * multiplier),
+				'level_3': int(randrange(10) * multiplier),
+				'level_4': int(level_4 * multiplier),
+				'level_5': int(level_5 * multiplier)
 			}
 		battle = Battle(bot, player, '1', str(hero))
 		raport = battle.generate_battle_raport()
 		battle_dialog = BattleDialog(self, battle, player)
+		if battle.loser == player:
+			battle.update_loser(player, str(hero))
 		del bot
 
 		
