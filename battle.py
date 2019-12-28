@@ -235,6 +235,7 @@ class BattleDialog(QDialog):
 			min-height: 15px;}
 			
 			QScrollArea{
+			background: white;
 			background-image: url(UI/brown_background.jpg);}	
 			
 			QPushButton:pressed {
