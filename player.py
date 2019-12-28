@@ -220,7 +220,6 @@ class PlayerActions(QWidget):
 			#Zmienić wartoś nowej zmiennej, że już się ruszył
 			self.main_window.show_info()
 			for special_location in self.main_window.special_locations:
-				print(tile, special_location)
 				if tile == special_location:
 					self.handle_special_tile(player, hero, tile)
 					break
@@ -234,25 +233,19 @@ class PlayerActions(QWidget):
 		alert = Alert(self)
 		if rand < 28:
 			self.random_fight(player, hero, 'easy', location)
-			print('Łatwa walka')
 		elif rand < 65:
 			alert.get_prize(500)
 			player.update_gold_amount(player.gold + 500)
-			print('Mała nagroda')
 		elif rand < 80:
 			self.random_fight(player, hero, 'medium', location)
-			print('Średnia walka')
 		elif rand < 95:
 			alert.get_prize(1000)
 			player.update_gold_amount(player.gold + 1000)
-			print('Średnia nagroda')
 		elif rand < 98:
 			alert.get_prize(2000)
 			player.update_gold_amount(player.gold + 2000)
-			print('Duza nagroda')
 		else:
 			self.random_fight(player, hero, 'hard', location)
-			print('Trudna walka')
 		del alert
 		
 

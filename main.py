@@ -115,18 +115,26 @@ class Board(QWidget):
 		self.board.addWidget(self.parent().player2, 1, 1, self.parent().height - 2, self.parent().width / 2 - 1)# najpier dodaje oba, a pożniej chowam i pokazuje w zależności od tury
 		self.board.addWidget(self.parent().player1, 1, 1, self.parent().height - 2, self.parent().width / 2 - 1)
 
-		if self.parent().update_units:
+		if self.parent().update_units:		#We should update units and money at the same moment
 			self.parent().update_units = False
 			available = self.parent().player1.available_units
 			i = 0
-			for level in available:
+			growth = {
+				1 : [10, 7, 0, 0, 0],
+				2 : [20, 15, 5, 0, 0],
+				3 : [25, 20, 10, 3, 0],
+				4 : [35, 25, 15, 6, 2]	
+			}
+			for i in range(5):
+				level = 'level_' + str(i + 1)
 				if self.parent().player1.castle.available[i]:
-					self.parent().player1.available_units[level] += 10
+					self.parent().player1.available_units[level] += growth[self.parent().player1.castle_level][i]
 				if self.parent().player2.castle.available[i]:
-					self.parent().player2.available_units[level] += 10
+					self.parent().player2.available_units[level] += growth[self.parent().player1.castle_level][i]
 				self.parent().player1.castle.update_unit_labels()
 				self.parent().player2.castle.update_unit_labels()
-				i += 1
+			
+			
 
 		if self.parent().turn % 2 is 0:
 			self.player_info = self.parent().player2
@@ -151,6 +159,7 @@ class Board(QWidget):
 			if i in self.parent().special_tiles:
 				self.set_button_stylesheet(self.buttons[i], 'objects/treasure.png')
 
+
 	def generate_special_tiles(self):
 		self.parent().special_tiles.clear()
 		self.parent().special_locations.clear()
@@ -160,6 +169,7 @@ class Board(QWidget):
 				self.set_button_stylesheet(self.buttons[i], 'objects/treasure.png')
 				location = self.parent().board.getItemPosition(i)
 				self.parent().special_locations.append((location[1], location[0]))
+
 
 	def set_hero(self, x, y, which_one):
 		if which_one == self.player1_button:
@@ -270,13 +280,11 @@ class mainWindow(QMainWindow):
 			player = self.player1
 		player.update_dice_amount(dice.dice)
 		player.update_week_day(self.week, self.day)
-		#print("przed %d"%player.hero)
 		player.can_move = True
 		if not player.available_heroes:
 			player.hero = None
 		else:
 			player.hero = player.available_heroes[0]
-		#print("po %d" % player.hero)
 		dice.exec_()
 
 
