@@ -20,7 +20,7 @@ class Castle(QDialog):
 			font-size: 18pt;
 			font: Arial;
 			min-height: 15px;}
-			
+
 			QPushButton:pressed {
 			background-image: url(UI/darker_brown_background.jpg);}
 			""")
@@ -76,12 +76,12 @@ class Castle(QDialog):
 		for label in self.units:
 			self.grid.addWidget(label, i, 0)
 			i += 1
-		if self.parent().castle_level < 4:# nie wiem czy poziom zamku ma ograniczenie, ale dodaję dla pewności
+		if self.parent().castle_level < 4:  # nie wiem czy poziom zamku ma ograniczenie, ale dodaję dla pewności
 			self.grid.addWidget(self.upgrade, i, 0, 1, 3)
 		close = QPushButton()
 		close.setText('Zamknij')
 		close.clicked.connect(self._dialog.close)
-		self.grid.addWidget(close, i + 1, 0, 1, 3)# Losowo się minimalizuje, nie wiem czemu xD
+		self.grid.addWidget(close, i + 1, 0, 1, 3)  # Losowo się minimalizuje, nie wiem czemu xD
 
 		j = 0
 		for i in range(len(self.prices)):
@@ -97,13 +97,13 @@ class Castle(QDialog):
 	def upgrade_castle(self):
 		mainWindow = self.parent().parent().parent()
 		if self.parent().gold >= 3000:
-			self.parent().update_castle_level(self.parent().castle_level+1)
-			self.parent().update_gold_amount(self.parent().gold-3000)
+			self.parent().update_castle_level(self.parent().castle_level + 1)
+			self.parent().update_gold_amount(self.parent().gold - 3000)
 			count = self.available.count(True)
 			self.available[count] = True
 			label = self.unavailable.pop()
 			label.hide()
-			curr_level = 'level_' + str(count+1)
+			curr_level = 'level_' + str(count + 1)
 			self.parent().available_units[curr_level] = 5
 			self.update_unit_labels()
 			self._dialog.close()
@@ -147,7 +147,7 @@ class Castle(QDialog):
 				font-size: 18pt;
 				font: Arial;
 				min-height: 15px;}
-				
+
 				QPushButton:pressed {
 				background-image: url(UI/darker_brown_background.jpg);}
 				""")
@@ -169,10 +169,10 @@ class Castle(QDialog):
 			self.value = QLabel()
 			self.value.setAlignment(Qt.AlignCenter)
 			self.value.setText(str(1))
-			self.price = int(self.prices[level-1])
+			self.price = int(self.prices[level - 1])
 			self.to_pay = self.price
 
-			self.full_price = QLabel("Suma do zapłaty: %d" % self.price)# taki napis?
+			self.full_price = QLabel("Suma do zapłaty: %d" % self.price)  # taki napis?
 
 			hlay.addWidget(minus)
 			hlay.addWidget(self.slider_buy)
@@ -215,7 +215,7 @@ class Castle(QDialog):
 
 	def buy(self):
 		mainWindow = self.parent().parent().parent()
-		if self.parent().gold >= self.to_pay: #pozwala ci kupić tylko jak cię stać, jak nie to nic nie robi/ wypisuje, że cię nie stać
+		if self.parent().gold >= self.to_pay:  # pozwala ci kupić tylko jak cię stać, jak nie to nic nie robi/ wypisuje, że cię nie stać
 			self.parent().update_gold_amount(self.parent().gold - self.to_pay)
 			self.parent().available_units[self.curr_level] -= self.slider_buy.value()
 			self.parent().in_castle_units[self.curr_level] += self.slider_buy.value()
@@ -228,7 +228,7 @@ class Castle(QDialog):
 	def substract(self):
 		value = self.slider_buy.value()
 		if value is not 0:
-			self.slider_buy.setValue(value-1)
+			self.slider_buy.setValue(value - 1)
 
 	def changeValue(self, value):
 		self.value.setText(str(value))
@@ -238,7 +238,7 @@ class Castle(QDialog):
 	def add(self):
 		value = self.slider_buy.value()
 		if value is not self.max_units:
-			self.slider_buy.setValue(value+1)
+			self.slider_buy.setValue(value + 1)
 
 	def add_to_team(self, level):
 		x, y = self.parent().castle_x, self.parent().castle_y
@@ -265,7 +265,7 @@ class Castle(QDialog):
 					font-size: 18pt;
 					font: Arial;
 					min-height: 15px;}
-					
+
 					QPushButton:pressed {
 					background-image: url(UI/darker_brown_background.jpg);}
 					""")
@@ -343,28 +343,29 @@ class Castle(QDialog):
 			layout.addWidget(text)
 			self._dialog.setLayout(layout)
 			self._dialog.exec_()
+
 	def team(self):
 		mainWindow = self.parent().parent().parent()
 		hero = self.parent().hero
 		if hero is 1:
 			self.parent().h1units[self.curr_level] += self.slider_team.value()
-			#print("h1 %s" % self.parent().h1units)
+		# print("h1 %s" % self.parent().h1units)
 		elif hero is 2:
 			self.parent().h2units[self.curr_level] += self.slider_team.value()
-			#print("h2 %s" % self.parent().h2units)
+		# print("h2 %s" % self.parent().h2units)
 		else:
 			self.parent().h3units[self.curr_level] += self.slider_team.value()
-			#print("h3 %s" % self.parent().h3units)
+		# print("h3 %s" % self.parent().h3units)
 		self.parent().in_castle_units[self.curr_level] -= self.slider_team.value()
 		self.update_unit_labels()
 		self._dialog_team.close()
 		self.show_castle()
-		mainWindow.show_info()# chyba nie terzeba odświeżać
+		mainWindow.show_info()  # chyba nie terzeba odświeżać
 
 	def substract_team(self):
 		value = self.slider_team.value()
 		if value is not 0:
-			self.slider_team.setValue(value-1)
+			self.slider_team.setValue(value - 1)
 
 	def changeValue_team(self, value):
 		self.value.setText(str(value))
@@ -372,10 +373,10 @@ class Castle(QDialog):
 	def add_team(self):
 		value = self.slider_team.value()
 		if value is not self.max_units:
-			self.slider_team.setValue(value+1)
+			self.slider_team.setValue(value + 1)
 
 	def update_unit_labels(self):
 		for level in range(len(self.available)):
-			curr_level = 'level_' + str(level+1)
-			self.units[level+1].setText("Jednostki poziomu %d: %d (%d)" % (level+1, self.parent().in_castle_units[curr_level], self.parent().available_units[curr_level]))
-
+			curr_level = 'level_' + str(level + 1)
+			self.units[level + 1].setText("Jednostki poziomu %d: %d (%d)" % (
+			level + 1, self.parent().in_castle_units[curr_level], self.parent().available_units[curr_level]))
