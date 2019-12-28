@@ -105,10 +105,8 @@ class PlayerInfo(QWidget):
 		self.update_gold_amount(5000)
 		#self.update_week_day()
 
-
 	def show_castle(self):
 		self.castle.show_castle()
-
 
 	def update_castle_level(self, level):
 		self.castle_level = level
@@ -116,13 +114,11 @@ class PlayerInfo(QWidget):
 		self.labels[1] = QLabel(text)
 		self.grid.addWidget(self.labels[1], 2, 0)
 
-
 	def update_gold_amount(self, amount):
 		self.gold = amount
 		text = 'Złoto: ' + str(amount)
 		self.labels[2] = QLabel(text)
 		self.grid.addWidget(self.labels[2], 3, 0)
-
 
 	def update_dice_amount(self, amount):
 		self.dice = amount
@@ -130,12 +126,10 @@ class PlayerInfo(QWidget):
 		self.labels[3] = QLabel(text)
 		self.grid.addWidget(self.labels[3], 4, 0)
 
-
 	def update_week_day(self, week, day): # z jakiegoś powodu, jak się używa parent() to wywala cały program
 		text = 'Tydzień: ' + str(week) + ', Dzień: ' + str(day)
 		self.labels[4] = QLabel(text)
 		self.grid.addWidget(self.labels[4], 5, 0)
-
 
 	def clear_hero_pos(self, hero_num):
 		if hero_num == 1:
@@ -163,7 +157,7 @@ class PlayerActions(QWidget):
 			color: white;
 			font-size: 18pt;
 			font: Arial;
-			min-height: 15px;}
+			min-height: 50px;}
 			
 			QPushButton:pressed {
 			background-image: url(UI/darker_brown_background.jpg);}
@@ -185,7 +179,6 @@ class PlayerActions(QWidget):
 		self.buttons[5].clicked.connect(self.set_hero_three)
 		self.buttons[6].clicked.connect(self.move)
 		self.setLayout(self.grid)
-
 
 	def start_combat(self):
 		if self.main_window.turn % 2 is 1:
@@ -211,8 +204,23 @@ class PlayerActions(QWidget):
 				battle.update_loser(battle.loser, battle.lost_hero)
 				battle_dialog = BattleDialog(self, battle, whose_turn)
 			else:
-				print('Nie ma zadnego przeciwnika')
-
+				self._dialog = QDialog(self)
+				self._dialog.setWindowTitle('!')
+				self._dialog.setStyleSheet("""
+					background-image: url(UI/brown_background.jpg);
+					background-attachment: scroll;
+					border: 2px outset gray;
+					border-radius: 10px;
+					color: white;
+					font-size: 18pt;
+					font: Arial;
+					min-height: 15px;
+					""")
+				layout = QVBoxLayout()  # Pierwszy lepszy layout
+				text = QLabel('Nie ma zadnego przeciwnika')
+				layout.addWidget(text)
+				self._dialog.setLayout(layout)
+				self._dialog.exec_()
 
 	def move(self):
 		if self.main_window.turn % 2 is 0:
@@ -230,11 +238,27 @@ class PlayerActions(QWidget):
 			for special_location in self.main_window.special_locations:
 				print(tile, special_location)
 				if tile == special_location:
-					print('\n\n\n\n\nPole specjalne!\n\n\n\n')
+					print('\nPole specjalne!\n')
 					self.handle_special_tile(player, hero, tile)
 					break
-		else:# zmieni się na jakiś dialog czy coś
-			print("Już się ruszyłeś w tej turze")
+		else:
+			self._dialog = QDialog(self)
+			self._dialog.setWindowTitle('!')
+			self._dialog.setStyleSheet("""
+				background-image: url(UI/brown_background.jpg);
+				background-attachment: scroll;
+				border: 2px outset gray;
+				border-radius: 10px;
+				color: white;
+				font-size: 18pt;
+				font: Arial;
+				min-height: 15px;
+				""")
+			layout = QVBoxLayout() #Pierwszy lepszy layout
+			text = QLabel('Już się ruszyłeś w tej turze')
+			layout.addWidget(text)
+			self._dialog.setLayout(layout)
+			self._dialog.exec_()
 
 
 	def handle_special_tile(self, player, hero, location):
@@ -348,7 +372,7 @@ class PlayerActions(QWidget):
 			color: white;
 			font-size: 18pt;
 			font: Arial;
-			min-height: 15px;}
+			min-height: 20px;}
 			
 			QPushButton:pressed {
 			background-image: url(UI/darker_brown_background.jpg);}
@@ -445,7 +469,7 @@ class PlayerActions(QWidget):
 			color: white;
 			font-size: 18pt;
 			font: Arial;
-			min-height: 15px;}
+			min-height: 20px;}
 			
 			QPushButton:pressed {
 			background-image: url(UI/darker_brown_background.jpg);}

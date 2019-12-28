@@ -53,6 +53,9 @@ class Castle(QDialog):
 		self.available = [True, True, False, False, False]
 		self.button = []
 		self.button_add = []
+		self.unavailable = []
+		for i in range(3):
+			self.unavailable.append(QLabel('Aby odblokować te jednostki musisz ulepszyć zamek'))
 		for i in range(len(self.prices)):
 			self.button.append(QPushButton('Kup jednostkę poziomu %s za %s złota' % (str(i + 1), str(self.prices[i]))))
 			self.button_add.append(QPushButton('Dodaj do drużyny'))
@@ -73,18 +76,21 @@ class Castle(QDialog):
 		for label in self.units:
 			self.grid.addWidget(label, i, 0)
 			i += 1
-		if self.parent().castle_level <= 4:# nie wiem czy poziom zamku ma ograniczenie, ale dodaję dla pewności
+		if self.parent().castle_level < 4:# nie wiem czy poziom zamku ma ograniczenie, ale dodaję dla pewności
 			self.grid.addWidget(self.upgrade, i, 0, 1, 3)
 		close = QPushButton()
 		close.setText('Zamknij')
 		close.clicked.connect(self._dialog.close)
 		self.grid.addWidget(close, i + 1, 0, 1, 3)# Losowo się minimalizuje, nie wiem czemu xD
+
+		j = 0
 		for i in range(len(self.prices)):
 			if self.available[i]:
 				self.grid.addWidget(self.button[i], i + 1, 1)
 				self.grid.addWidget(self.button_add[i], i + 1, 2)
 			else:
-				self.grid.addWidget(QPushButton('Aby odblokować te jednostki musisz ulepszyć zamek'), i + 1, 1, 1, 2)
+				self.grid.addWidget(self.unavailable[j], i + 1, 1, 1, 2)
+				j += 1
 		self._dialog.setLayout(self.grid)
 		self._dialog.exec_()
 
@@ -95,13 +101,34 @@ class Castle(QDialog):
 			self.parent().update_gold_amount(self.parent().gold-3000)
 			count = self.available.count(True)
 			self.available[count] = True
+			label = self.unavailable.pop()
+			label.deleteLater()
 			curr_level = 'level_' + str(count+1)
 			self.parent().available_units[curr_level] = 5
 			self.update_unit_labels()
 			self._dialog.close()
+			if self.parent().castle_level is 4:
+				self.upgrade.deleteLater()
 			mainWindow.show_info()
 		else:
-			print("Masz za mało złota")
+			self._dialog = QDialog(self)
+			self._dialog.setWindowTitle('!')
+			self._dialog.setStyleSheet("""
+				background-image: url(UI/brown_background.jpg);
+				background-attachment: scroll;
+				border: 2px outset gray;
+				border-radius: 10px;
+				color: white;
+				font-size: 18pt;
+				font: Arial;
+				min-height: 15px;
+				""")
+			layout = QVBoxLayout()  # Pierwszy lepszy layout
+			text = QLabel('Masz za mało złota')
+			layout.addWidget(text)
+			self._dialog.setLayout(layout)
+			self._dialog.exec_()
+
 
 	def buy_unit(self, level):
 		self.curr_level = 'level_' + str(level)  # potrzebuję ziennej level osobno
@@ -166,7 +193,23 @@ class Castle(QDialog):
 			self._dialog_buy.setLayout(layout)
 			self._dialog_buy.exec_()
 		else:
-			print("Brak dostępnych jednostek do kupienia")
+			self._dialog = QDialog(self)
+			self._dialog.setWindowTitle('!')
+			self._dialog.setStyleSheet("""
+				background-image: url(UI/brown_background.jpg);
+				background-attachment: scroll;
+				border: 2px outset gray;
+				border-radius: 10px;
+				color: white;
+				font-size: 18pt;
+				font: Arial;
+				min-height: 15px;
+				""")
+			layout = QVBoxLayout()  # Pierwszy lepszy layout
+			text = QLabel('Brak dostępnych jednostek do kupienia')
+			layout.addWidget(text)
+			self._dialog.setLayout(layout)
+			self._dialog.exec_()
 
 	def buy(self):
 		mainWindow = self.parent().parent().parent()
@@ -178,7 +221,23 @@ class Castle(QDialog):
 			self.update_unit_labels()
 			mainWindow.show_info()
 		else:
-			print("Za mało złota")
+			self._dialog = QDialog(self)
+			self._dialog.setWindowTitle('!')
+			self._dialog.setStyleSheet("""
+				background-image: url(UI/brown_background.jpg);
+				background-attachment: scroll;
+				border: 2px outset gray;
+				border-radius: 10px;
+				color: white;
+				font-size: 18pt;
+				font: Arial;
+				min-height: 15px;
+				""")
+			layout = QVBoxLayout()  # Pierwszy lepszy layout
+			text = QLabel('Masz za mało złota')
+			layout.addWidget(text)
+			self._dialog.setLayout(layout)
+			self._dialog.exec_()
 
 	def substract(self):
 		value = self.slider_buy.value()
@@ -263,10 +322,41 @@ class Castle(QDialog):
 				self._dialog_team.setLayout(layout)
 				self._dialog_team.exec_()
 			else:
-				print("Brak dostępnych jednostek do dodania")
+				self._dialog = QDialog(self)
+				self._dialog.setWindowTitle('!')
+				self._dialog.setStyleSheet("""
+					background-image: url(UI/brown_background.jpg);
+					background-attachment: scroll;
+					border: 2px outset gray;
+					border-radius: 10px;
+					color: white;
+					font-size: 18pt;
+					font: Arial;
+					min-height: 15px;
+					""")
+				layout = QVBoxLayout()  # Pierwszy lepszy layout
+				text = QLabel('Brak dostępnych jednostek do dodania')
+				layout.addWidget(text)
+				self._dialog.setLayout(layout)
+				self._dialog.exec_()
 		else:
-			print("Musisz być w zamku aby przenieść jednostki")
-
+			self._dialog = QDialog(self)
+			self._dialog.setWindowTitle('!')
+			self._dialog.setStyleSheet("""
+				background-image: url(UI/brown_background.jpg);
+				background-attachment: scroll;
+				border: 2px outset gray;
+				border-radius: 10px;
+				color: white;
+				font-size: 18pt;
+				font: Arial;
+				min-height: 15px;
+				""")
+			layout = QVBoxLayout()  # Pierwszy lepszy layout
+			text = QLabel('Musisz być w zamku aby przenieść jednostki')
+			layout.addWidget(text)
+			self._dialog.setLayout(layout)
+			self._dialog.exec_()
 	def team(self):
 		mainWindow = self.parent().parent().parent()
 		hero = self.parent().hero

@@ -13,19 +13,18 @@ class DiceRoll(QDialog):
 		self.setWindowTitle("Rzut kością")
 
 		self.setStyleSheet("""
-				QDialog, QLabel, QPushButton {
-				background-image: url(UI/brown_background.jpg);
-				background-attachment: scroll;
-				border: 2px outset gray;
-				border-radius: 10px;
-				color: white;
-				font-size: 18pt;
-				font: Arial;
-				min-height: 15px;}
-				
-				QPushButton:pressed {
-				background-image: url(UI/darker_brown_background.jpg);
-				}
+			QDialog, QLabel, QPushButton {
+			background-image: url(UI/brown_background.jpg);
+			background-attachment: scroll;
+			border: 2px outset gray;
+			border-radius: 10px;
+			color: white;
+			font-size: 18pt;
+			font: Arial;
+			min-height: 15px;}
+			
+			QPushButton:pressed {
+			background-image: url(UI/darker_brown_background.jpg);}
 			""")
 
 		grid = QGridLayout(self)
