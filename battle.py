@@ -49,6 +49,10 @@ class Battle():
 			winner_player.h3units = result_dict
 		else:
 			winner_player.in_castle_units = result_dict
+		if winner_player == self.attacking_player:
+			winner_player.update_gold_amount(winner_player.gold + self.attacking_prize)
+		else:
+			winner_player.update_gold_amount(winner_player.gold + self.attacked_prize)
 
 
 	#must come back to default values, because this hero will be available for buying now
@@ -87,6 +91,11 @@ class Battle():
 			'level_4': self.unit_health['level_4'] * self.attacked_hero['level_4'],
 			'level_5': self.unit_health['level_5'] * self.attacked_hero['level_5']
 		}
+		self.attacking_prize = self.attacked_hero['level_1'] * 10 + \
+			self.attacked_hero['level_2'] * 25 + \
+			self.attacked_hero['level_3'] * 50 + \
+			self.attacked_hero['level_4'] * 100 + \
+			self.attacked_hero['level_5'] * 200 
 
 		attacking_health = {
 			'level_1': self.unit_health['level_1'] * self.attacking_hero['level_1'],
@@ -95,6 +104,12 @@ class Battle():
 			'level_4': self.unit_health['level_4'] * self.attacking_hero['level_4'],
 			'level_5': self.unit_health['level_5'] * self.attacking_hero['level_5']
 		}
+
+		self.attacked_prize = self.attacking_hero['level_1'] * 10 + \
+			self.attacking_hero['level_2'] * 25 + \
+			self.attacking_hero['level_3'] * 50 + \
+			self.attacking_hero['level_4'] * 100 + \
+			self.attacking_hero['level_5'] * 200 
 		
 		while self.health(attacking_health) > 0 and self.health(attacked_health) > 0:
 			#tura pierwszego gracza:
@@ -119,12 +134,15 @@ class Battle():
 			self.hero = self.hero1
 			self.loser = self.attacked_player
 			self.lost_hero = self.hero2
+			prize = self.attacking_prize
 		else:
 			self.winner = self.attacked_player
 			self.loser = self.attacking_player
 			self.raport += 'Atakowany gracz skutecznie obronił się przed agresorem i wygrał walkę.\n'
 			self.hero = self.hero2
 			self.lost_hero = self.hero1
+			prize = self.attacked_prize
+
 		winner_health = attacked_health
 		if self.health(attacking_health) > 0:
 			winner_health = attacking_health
@@ -139,6 +157,7 @@ class Battle():
 						'level_4': math.ceil(winner_health['level_4'] / self.unit_health['level_4']),
 						'level_5': math.ceil(winner_health['level_5'] / self.unit_health['level_5'])}
 
+		self.raport += '\nZwycięzca zdobył %d sztuk złota\n\n' % prize
 		self.update_winner(self.winner, self.hero, result_dict)
 		return self.raport
 
