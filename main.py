@@ -152,6 +152,8 @@ class Board(QWidget):
 		for i in range(self.tiles_amount): #shows special tiles every turn
 			if i in self.parent().special_tiles:
 				self.set_button_stylesheet(self.buttons[i], 'objects/treasure.png')
+				location = self.parent().board.getItemPosition(i)
+				print(i, location[:2])
 
 
 	def generate_special_tiles(self):
