@@ -36,6 +36,7 @@ class Board(QWidget):
 			self.parent().player2.h3pos_y = self.parent().height - 1
 
 		self.generate_board(self.parent().width, self.parent().height)
+		self.generate_special_tiles()
 
 		act = PlayerActions(self)
 		place = self.parent().width / 2
@@ -131,11 +132,14 @@ class Board(QWidget):
 			self.player_info = self.parent().player2
 			self.parent().player1.hide()
 			self.player_info.show()
-			self.parent().day += 1
-			if self.parent().day % 7 is 1:
-				self.parent().week += 1
-				self.parent().update_units = True
+			if not self.parent().changed_day:
+				self.parent().changed_day = True
+				self.parent().day += 1
+				if self.parent().day % 7 is 1:
+					self.parent().week += 1
+					self.parent().update_units = True
 		else:
+			self.parent().changed_day = False
 			self.player_info = self.parent().player1 #player_info nadal jest potrzebne, bo jest używane w innych miejscach w kodzie
 			self.parent().player2.hide()
 			self.player_info.show()
@@ -143,16 +147,9 @@ class Board(QWidget):
 
 		self.show_heroes()
 
-		if self.parent().turn is 1 and not self.parent().special_tiles:
-			self.generate_special_tiles()
-		elif self.parent().day % 7 is 1 and self.parent().turn % 2 is 1 and self.parent().turn is not 1:
-			self.parent().special_tiles.clear()
-			self.generate_special_tiles()
-
 		for i in range(self.tiles_amount): #shows special tiles every turn
 			if i in self.parent().special_tiles:
 				self.set_button_stylesheet(self.buttons[i], 'objects/treasure.png')
-
 
 	def generate_special_tiles(self):
 		self.parent().special_tiles.clear()
@@ -164,7 +161,6 @@ class Board(QWidget):
 				location = self.parent().board.getItemPosition(i)
 				self.parent().special_locations.append((location[1], location[0]))
 
-
 	def set_hero(self, x, y, which_one):
 		if which_one == self.player1_button:
 			self.player1_button.show()
@@ -173,7 +169,6 @@ class Board(QWidget):
 			self.player2_button.show()
 			self.set_button_stylesheet(which_one, 'sprites/hero2_p.png')
 		self.board.addWidget(which_one, y, x) #row / column
-
 
 	def set_hero_2(self, x, y, which_one):
 		if which_one == self.player1_button2:
@@ -184,7 +179,6 @@ class Board(QWidget):
 			self.set_button_stylesheet(which_one, 'sprites/hero2_2p.png')
 		self.board.addWidget(which_one, y, x)
 
-
 	def set_hero_3(self, x, y, which_one):
 		if which_one == self.player1_button3:
 			self.player1_button3.show()
@@ -194,14 +188,12 @@ class Board(QWidget):
 			self.set_button_stylesheet(which_one, 'sprites/hero2_3p.png')
 		self.board.addWidget(which_one, y, x)
 
-
 	def set_button_stylesheet(self, button, image):
 		str = 'height: 60px; width: 60px; background-image: url(None); border-image: url("'
 		str += image
 		str += '");'
 		button.setStyleSheet(str)
 		return button
-
 
 	def get_opponent_on_tile(self, x, y):
 		#1, 2, 3 or castle
@@ -241,6 +233,7 @@ class mainWindow(QMainWindow):
 		self.day = 1
 		self.turn = 1
 		self.update_units = False
+		self.changed_day = False
 
 		self.width = 15
 		self.height = 10
