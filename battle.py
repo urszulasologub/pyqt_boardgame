@@ -4,6 +4,7 @@ from random import randrange
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+from alerts import *
 
 
 class Battle():
@@ -294,6 +295,10 @@ class BattleDialog(QDialog):
 		self.setLayout(grid)
 
 		self.exec_()
+
+		if battle.lost_hero == 'castle':
+			alert = Alert(self)
+			alert.victory(main_window, battle.winner)
 	
 
 
