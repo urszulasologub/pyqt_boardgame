@@ -8,6 +8,7 @@ from dice import DiceRoll
 from castle import Castle
 import math
 from battle import *
+from alerts import *
 from random import randrange
 
 
@@ -57,7 +58,7 @@ class PlayerInfo(QWidget):
 			"level_2": 5,
 			"level_3": 0,
 			"level_4": 0,
-			"level_5": 0
+			"level_5": 1
 		}
 
 		self.available_units = {
@@ -238,8 +239,7 @@ class PlayerActions(QWidget):
 			for special_location in self.main_window.special_locations:
 				print(tile, special_location)
 				if tile == special_location:
-					print('\nPole specjalne!\n')
-					self.handle_special_tile(player, hero, tile)
+        self.handle_special_tile(player, hero, tile)
 					break
 		else:
 			self._dialog = QDialog(self)
@@ -261,46 +261,92 @@ class PlayerActions(QWidget):
 			self._dialog.exec_()
 
 
-	def handle_special_tile(self, player, hero, location):
-		situations = { 'easy_fight': self.random_fight(player, hero, 'easy', location),
-					'medium_fight': 'medium_fight',
-					'hard_fight': 'hard_fight',
-					'small_prize': 'small_prize',
-					'medium_prize': 'medium_prize',
-					'big_prize': 'big_prize' }		
+	def handle_special_tile(self, player, hero, location):	
 		rand = randrange(1, 101)
+		print(rand)
+		alert = Alert(self)
 		if rand < 28:
-			situation = situations['easy_fight']
+			self.random_fight(player, hero, 'easy', location)
+			print('Łatwa walka')
 		elif rand < 65:
-			situation = situations['small_prize']
+			alert.get_prize(500)
+			player.update_gold_amount(player.gold + 500)
+			print('Mała nagroda')
 		elif rand < 80:
-			situation = situations['medium_fight']
+			self.random_fight(player, hero, 'medium', location)
+			print('Średnia walka')
 		elif rand < 95:
-			situation = situations['medium_prize']
+			alert.get_prize(1000)
+			player.update_gold_amount(player.gold + 1000)
+			print('Średnia nagroda')
 		elif rand < 98:
-			situation = situations['big_prize']
+			alert.get_prize(2000)
+			player.update_gold_amount(player.gold + 2000)
+			print('Duza nagroda')
 		else:
-			situation = situations['hard_fight']
-
-		print(situation)
+			self.random_fight(player, hero, 'hard', location)
+			print('Trudna walka')
+		del alert
 		
 
 	def random_fight(self, player, hero, level, location):
+		alert = Alert(self)
 		bot = PlayerInfo(self.main_window, 'bot', None, None)
 		bot.h1pos_x = location[0]
 		bot.h2pos_x = location[1]
-		multiplier = self.main_window.week
 		if level == 'easy':
+			multiplier = self.main_window.week
+			level_3 = randrange(5)
+			if self.main_window.week < 5:
+				level_3 = 0
 			bot.h1units = {
-				'level_1': int(randrange(10) * multiplier),
+				'level_1': int(randrange(1, 10) * multiplier),
 				'level_2': int(randrange(2) * multiplier),
-				'level_3': 0,
+				'level_3': level_3,
 				'level_4': 0,
 				'level_5': 0
 			}
+			alert.get_battle('easy', bot.h1units)
+		elif level == 'medium':
+			multiplier = self.main_window.week * 1.5
+			level_3 = randrange(2)
+			level_4 = randrange(1) * multiplier
+			if self.main_window.week < 3:
+				level_3 = 0
+			if self.main_window.week < 6:
+				level_4 = 0
+			bot.h1units = {
+				'level_1': int(randrange(10) * multiplier),
+				'level_2': int(randrange(1, 5) * multiplier),
+				'level_3': int(level_3 * multiplier),
+				'level_4': int(level_4),
+				'level_5': 0
+			}
+			alert.get_battle('medium', bot.h1units)
+		else:
+			if self.main_window.week < 3:
+				level_4 = 0
+				multiplier = 0.5
+			else:
+				multiplier = self.main_window.week * 2
+				level_4 = randrange(3)
+				level_5 = randrange(2) * 0.25
+			if self.main_window.week < 5:	
+				level_5 = 0
+			bot.h1units = {
+				'level_1': int(randrange(50) * multiplier),
+				'level_2': int(randrange(30) * multiplier),
+				'level_3': int(randrange(1, 10) * multiplier),
+				'level_4': int(level_4 * multiplier),
+				'level_5': int(level_5 * multiplier)
+			}
+			alert.get_battle('hard', bot.h1units)
+		del alert
 		battle = Battle(bot, player, '1', str(hero))
 		raport = battle.generate_battle_raport()
 		battle_dialog = BattleDialog(self, battle, player)
+		if battle.loser == player:
+			battle.update_loser(player, str(hero))
 		del bot
 
 		
