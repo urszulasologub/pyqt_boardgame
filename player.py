@@ -23,8 +23,8 @@ class PlayerInfo(QWidget):
 		self.h2pos_y = 0
 		self.h3pos_x = 0
 		self.h3pos_y = 0
-		self.hero = 1# to którym obecnie bohaterem się porusza
 		self.available_heroes = [1]
+		self.hero = 1
 		self.can_move = False
 
 		self.h1units = {
@@ -382,14 +382,17 @@ class PlayerActions(QWidget):
 		else:
 			units = player.h3units
 		layout = QVBoxLayout()
-		labels = [QLabel('Drużyna bohatera %d' % hero),
-				  QLabel('Jednostki poziomu 1: %d' % units['level_1']),
-				  QLabel('Jednostki poziomu 2: %d' % units['level_2']),
-				  QLabel('Jednostki poziomu 3: %d' % units['level_3']),
-				  QLabel('Jednostki poziomu 4: %d' % units['level_4']),
-				  QLabel('Jednostki poziomu 5: %d' % units['level_5'])]
-		for label in labels:
-			layout.addWidget(label)
+		if hero is not None:
+			labels = [QLabel('Drużyna bohatera %d' % hero),
+					QLabel('Jednostki poziomu 1: %d' % units['level_1']),
+					QLabel('Jednostki poziomu 2: %d' % units['level_2']),
+					QLabel('Jednostki poziomu 3: %d' % units['level_3']),
+					QLabel('Jednostki poziomu 4: %d' % units['level_4']),
+					QLabel('Jednostki poziomu 5: %d' % units['level_5'])]
+			for label in labels:
+				layout.addWidget(label)
+		else:
+			layout.addWidget(QLabel('Nie wybrano bohatera'))
 		self._dialog.setLayout(layout)
 		self._dialog.exec_()
 

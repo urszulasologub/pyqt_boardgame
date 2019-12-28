@@ -237,7 +237,7 @@ class mainWindow(QMainWindow):
 		super(mainWindow, self).__init__(parent)
 
 		self.week = 1
-		self.day = 6#do testu
+		self.day = 1
 		self.turn = 1
 		self.update_units = False
 
@@ -277,7 +277,10 @@ class mainWindow(QMainWindow):
 		player.update_week_day(self.week, self.day)
 		#print("przed %d"%player.hero)
 		player.can_move = True
-		player.hero = 1 #przywrócić defaultową wartość dla kolejnego gracza
+		if not player.available_heroes:
+			player.hero = None
+		else:
+			player.hero = player.available_heroes[0]
 		#print("po %d" % player.hero)
 		dice.exec_()
 
