@@ -8,6 +8,7 @@ from dice import DiceRoll
 from castle import Castle
 import math
 from battle import *
+from alerts import *
 from random import randrange
 
 
@@ -57,7 +58,7 @@ class PlayerInfo(QWidget):
 			"level_2": 5,
 			"level_3": 0,
 			"level_4": 0,
-			"level_5": 0
+			"level_5": 1
 		}
 
 		self.available_units = {
@@ -221,7 +222,6 @@ class PlayerActions(QWidget):
 			for special_location in self.main_window.special_locations:
 				print(tile, special_location)
 				if tile == special_location:
-					print('\n\n\n\n\nPole specjalne!\n\n\n\n')
 					self.handle_special_tile(player, hero, tile)
 					break
 		else:# zmieni się na jakiś dialog czy coś
@@ -231,28 +231,33 @@ class PlayerActions(QWidget):
 	def handle_special_tile(self, player, hero, location):	
 		rand = randrange(1, 101)
 		print(rand)
+		alert = Alert(self)
 		if rand < 28:
 			self.random_fight(player, hero, 'easy', location)
 			print('Łatwa walka')
 		elif rand < 65:
+			alert.get_prize(500)
 			player.update_gold_amount(player.gold + 500)
 			print('Mała nagroda')
 		elif rand < 80:
 			self.random_fight(player, hero, 'medium', location)
 			print('Średnia walka')
 		elif rand < 95:
+			alert.get_prize(1000)
 			player.update_gold_amount(player.gold + 1000)
 			print('Średnia nagroda')
 		elif rand < 98:
+			alert.get_prize(2000)
 			player.update_gold_amount(player.gold + 2000)
 			print('Duza nagroda')
 		else:
 			self.random_fight(player, hero, 'hard', location)
 			print('Trudna walka')
-
+		del alert
 		
 
 	def random_fight(self, player, hero, level, location):
+		alert = Alert(self)
 		bot = PlayerInfo(self.main_window, 'bot', None, None)
 		bot.h1pos_x = location[0]
 		bot.h2pos_x = location[1]
@@ -262,12 +267,13 @@ class PlayerActions(QWidget):
 			if self.main_window.week < 5:
 				level_3 = 0
 			bot.h1units = {
-				'level_1': int(randrange(10) * multiplier),
+				'level_1': int(randrange(1, 10) * multiplier),
 				'level_2': int(randrange(2) * multiplier),
 				'level_3': level_3,
 				'level_4': 0,
 				'level_5': 0
 			}
+			alert.get_battle('easy', bot.h1units)
 		elif level == 'medium':
 			multiplier = self.main_window.week * 1.5
 			level_3 = randrange(2)
@@ -278,11 +284,12 @@ class PlayerActions(QWidget):
 				level_4 = 0
 			bot.h1units = {
 				'level_1': int(randrange(10) * multiplier),
-				'level_2': int(randrange(5) * multiplier),
+				'level_2': int(randrange(1, 5) * multiplier),
 				'level_3': int(level_3 * multiplier),
 				'level_4': int(level_4),
 				'level_5': 0
 			}
+			alert.get_battle('medium', bot.h1units)
 		else:
 			if self.main_window.week < 3:
 				level_4 = 0
@@ -296,10 +303,12 @@ class PlayerActions(QWidget):
 			bot.h1units = {
 				'level_1': int(randrange(50) * multiplier),
 				'level_2': int(randrange(30) * multiplier),
-				'level_3': int(randrange(10) * multiplier),
+				'level_3': int(randrange(1, 10) * multiplier),
 				'level_4': int(level_4 * multiplier),
 				'level_5': int(level_5 * multiplier)
 			}
+			alert.get_battle('hard', bot.h1units)
+		del alert
 		battle = Battle(bot, player, '1', str(hero))
 		raport = battle.generate_battle_raport()
 		battle_dialog = BattleDialog(self, battle, player)
