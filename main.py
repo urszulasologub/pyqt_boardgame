@@ -270,7 +270,6 @@ class mainWindow(QMainWindow):
 				background-attachment: scroll;
 			""")
 
-
 	def show_info(self):
 		self.board_widget.generate_board(self.width, self.height)
 
