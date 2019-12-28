@@ -140,7 +140,6 @@ class Battle():
 						'level_5': math.ceil(winner_health['level_5'] / self.unit_health['level_5'])}
 
 		self.update_winner(self.winner, self.hero, result_dict)
-		self.update_loser(self.loser, self.lost_hero)
 		return self.raport
 
 
@@ -217,14 +216,14 @@ class BattleDialog(QDialog):
 			""")
 		main_window = self.parent().parent().parent()
 		board = self.parent().parent()
-		if main_window.player1 == battle.winner:
+		if main_window.player2 == battle.loser:
 			if battle.lost_hero == '1':
 				board.player2_button.hide()
 			elif battle.lost_hero == '2':
 				board.player2_button2.hide()
 			elif battle.lost_hero == '3':
 				board.player2_button3.hide()
-		else:
+		elif main_window.player1 == battle.loser:
 			if battle.lost_hero == '1':
 				board.player1_button.hide()
 			elif battle.lost_hero == '2':

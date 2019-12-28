@@ -8,6 +8,7 @@ from dice import DiceRoll
 from castle import Castle
 import math
 from battle import *
+from random import randrange
 
 
 class PlayerInfo(QWidget):
@@ -195,10 +196,10 @@ class PlayerActions(QWidget):
 				x = whose_turn.h3pos_x
 				y = whose_turn.h3pos_y
 			opponent = self.board.get_opponent_on_tile(x, y)	
-			print(opponent)
 			if opponent:	
 				battle = Battle(whose_turn, attacked, str(whose_turn.hero), opponent[0])
 				raport = battle.generate_battle_raport()
+				battle.update_loser(battle.loser, battle.lost_hero)
 				battle_dialog = BattleDialog(self, battle, whose_turn)
 			else:
 				print('Nie ma zadnego przeciwnika')
@@ -221,9 +222,55 @@ class PlayerActions(QWidget):
 				print(tile, special_location)
 				if tile == special_location:
 					print('\n\n\n\n\nPole specjalne!\n\n\n\n')
+					self.handle_special_tile(player, hero, tile)
 					break
 		else:# zmieni się na jakiś dialog czy coś
 			print("Już się ruszyłeś w tej turze")
+
+
+	def handle_special_tile(self, player, hero, location):
+		situations = { 'easy_fight': self.random_fight(player, hero, 'easy', location),
+					'medium_fight': 'medium_fight',
+					'hard_fight': 'hard_fight',
+					'small_prize': 'small_prize',
+					'medium_prize': 'medium_prize',
+					'big_prize': 'big_prize' }		
+		rand = randrange(1, 101)
+		if rand < 28:
+			situation = situations['easy_fight']
+		elif rand < 65:
+			situation = situations['small_prize']
+		elif rand < 80:
+			situation = situations['medium_fight']
+		elif rand < 95:
+			situation = situations['medium_prize']
+		elif rand < 98:
+			situation = situations['big_prize']
+		else:
+			situation = situations['hard_fight']
+
+		print(situation)
+		
+
+	def random_fight(self, player, hero, level, location):
+		bot = PlayerInfo(self.main_window, 'bot', None, None)
+		bot.h1pos_x = location[0]
+		bot.h2pos_x = location[1]
+		multiplier = self.main_window.week
+		if level == 'easy':
+			bot.h1units = {
+				'level_1': int(randrange(10) * multiplier),
+				'level_2': int(randrange(2) * multiplier),
+				'level_3': 0,
+				'level_4': 0,
+				'level_5': 0
+			}
+		battle = Battle(bot, player, '1', str(hero))
+		raport = battle.generate_battle_raport()
+		battle_dialog = BattleDialog(self, battle, player)
+		del bot
+
+		
 
 	def move_hero(self, player, hero, height, width):
 		x = None
