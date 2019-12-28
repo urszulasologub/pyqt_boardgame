@@ -195,9 +195,9 @@ class Castle(QDialog):
 			self._dialog_buy.setLayout(layout)
 			self._dialog_buy.exec_()
 		else:
-			self._dialog = QDialog(self)
-			self._dialog.setWindowTitle('!')
-			self._dialog.setStyleSheet("""
+			self._dialog_error = QDialog(self)
+			self._dialog_error.setWindowTitle('!')
+			self._dialog_error.setStyleSheet("""
 				background-image: url(UI/brown_background.jpg);
 				background-attachment: scroll;
 				border: 2px outset gray;
@@ -210,8 +210,8 @@ class Castle(QDialog):
 			layout = QVBoxLayout()  # Pierwszy lepszy layout
 			text = QLabel('Brak dostępnych jednostek do kupienia')
 			layout.addWidget(text)
-			self._dialog.setLayout(layout)
-			self._dialog.exec_()
+			self._dialog_error.setLayout(layout)
+			self._dialog_error.exec_()
 
 	def buy(self):
 		mainWindow = self.parent().parent().parent()
@@ -308,9 +308,9 @@ class Castle(QDialog):
 				self._dialog_team.setLayout(layout)
 				self._dialog_team.exec_()
 			else:
-				self._dialog = QDialog(self)
-				self._dialog.setWindowTitle('!')
-				self._dialog.setStyleSheet("""
+				self._dialog_error = QDialog(self)
+				self._dial_dialog_errorog.setWindowTitle('!')
+				self._dialog_error.setStyleSheet("""
 					background-image: url(UI/brown_background.jpg);
 					background-attachment: scroll;
 					border: 2px outset gray;
@@ -323,12 +323,12 @@ class Castle(QDialog):
 				layout = QVBoxLayout()  # Pierwszy lepszy layout
 				text = QLabel('Brak dostępnych jednostek do dodania')
 				layout.addWidget(text)
-				self._dialog.setLayout(layout)
-				self._dialog.exec_()
+				self._dialog_error.setLayout(layout)
+				self._dialog_error.exec_()
 		else:
-			self._dialog = QDialog(self)
-			self._dialog.setWindowTitle('!')
-			self._dialog.setStyleSheet("""
+			self._dialog_error = QDialog(self)
+			self._dialog_error.setWindowTitle('!')
+			self._dialog_error.setStyleSheet("""
 				background-image: url(UI/brown_background.jpg);
 				background-attachment: scroll;
 				border: 2px outset gray;
@@ -341,8 +341,8 @@ class Castle(QDialog):
 			layout = QVBoxLayout()  # Pierwszy lepszy layout
 			text = QLabel('Musisz być w zamku aby przenieść jednostki')
 			layout.addWidget(text)
-			self._dialog.setLayout(layout)
-			self._dialog.exec_()
+			self._dialog_error.setLayout(layout)
+			self._dialog_error.exec_()
 
 	def team(self):
 		mainWindow = self.parent().parent().parent()
