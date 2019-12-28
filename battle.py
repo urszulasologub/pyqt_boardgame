@@ -238,6 +238,9 @@ class BattleDialog(QDialog):
 			background: white;
 			background-image: url(UI/brown_background.jpg);}	
 			
+			QScrollBar{
+			background: white;}	
+			
 			QPushButton:pressed {
 			background-image: url(UI/darker_brown_background.jpg);}
 			""")
