@@ -234,6 +234,9 @@ class BattleDialog(QDialog):
 			font: Arial;
 			min-height: 15px;}
 			
+			QScrollArea{
+			background-image: url(UI/brown_background.jpg);}	
+			
 			QPushButton:pressed {
 			background-image: url(UI/darker_brown_background.jpg);}
 			""")
