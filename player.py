@@ -235,13 +235,16 @@ class PlayerActions(QWidget):
 			self.random_fight(player, hero, 'easy', location)
 			print('Łatwa walka')
 		elif rand < 65:
+			player.update_gold_amount(player.gold + 500)
 			print('Mała nagroda')
 		elif rand < 80:
 			self.random_fight(player, hero, 'medium', location)
 			print('Średnia walka')
 		elif rand < 95:
+			player.update_gold_amount(player.gold + 1000)
 			print('Średnia nagroda')
 		elif rand < 98:
+			player.update_gold_amount(player.gold + 2000)
 			print('Duza nagroda')
 		else:
 			self.random_fight(player, hero, 'hard', location)
