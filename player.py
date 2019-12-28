@@ -238,7 +238,7 @@ class PlayerActions(QWidget):
 			self.main_window.show_info()
 			for special_location in self.main_window.special_locations:
 				if tile == special_location:
-        self.handle_special_tile(player, hero, tile)
+					self.handle_special_tile(player, hero, tile)
 					break
 		else:
 			self._dialog = QDialog(self)

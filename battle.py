@@ -64,7 +64,6 @@ class Battle():
 					'level_5': 0}
 		if hero == '1':
 			loser_player.h1units = result_dict
-
 		elif hero == '2':
 			loser_player.h2units = result_dict
 		elif hero == '3':
@@ -107,7 +106,7 @@ class Battle():
 
 		self.attacked_prize = self.attacking_hero['level_1'] * 10 + \
 			self.attacking_hero['level_2'] * 25 + \
-			self.attacking_hero['level_3'] * 50 + \
+			self.attacking_hero['level_3'] * 73 + \
 			self.attacking_hero['level_4'] * 100 + \
 			self.attacking_hero['level_5'] * 200 
 		
