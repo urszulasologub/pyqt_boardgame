@@ -102,33 +102,35 @@ class Castle(QDialog):
 			count = self.available.count(True)
 			self.available[count] = True
 			label = self.unavailable.pop()
-			label.deleteLater()
+			label.hide()
 			curr_level = 'level_' + str(count+1)
 			self.parent().available_units[curr_level] = 5
 			self.update_unit_labels()
 			self._dialog.close()
 			if self.parent().castle_level is 4:
-				self.upgrade.deleteLater()
+				self.upgrade.hide()
 			mainWindow.show_info()
 		else:
-			self._dialog = QDialog(self)
-			self._dialog.setWindowTitle('!')
-			self._dialog.setStyleSheet("""
-				background-image: url(UI/brown_background.jpg);
-				background-attachment: scroll;
-				border: 2px outset gray;
-				border-radius: 10px;
-				color: white;
-				font-size: 18pt;
-				font: Arial;
-				min-height: 15px;
-				""")
-			layout = QVBoxLayout()  # Pierwszy lepszy layout
-			text = QLabel('Masz za mało złota')
-			layout.addWidget(text)
-			self._dialog.setLayout(layout)
-			self._dialog.exec_()
+			self.not_enough_gold()
 
+	def not_enough_gold(self):
+		self._dialog_error = QDialog(self)
+		self._dialog_error.setWindowTitle('!')
+		self._dialog_error.setStyleSheet("""
+						background-image: url(UI/brown_background.jpg);
+						background-attachment: scroll;
+						border: 2px outset gray;
+						border-radius: 10px;
+						color: white;
+						font-size: 18pt;
+						font: Arial;
+						min-height: 15px;
+						""")
+		layout = QVBoxLayout()  # Pierwszy lepszy layout
+		text = QLabel('Masz za mało złota')
+		layout.addWidget(text)
+		self._dialog_error.setLayout(layout)
+		self._dialog_error.exec_()
 
 	def buy_unit(self, level):
 		self.curr_level = 'level_' + str(level)  # potrzebuję ziennej level osobno
@@ -221,23 +223,7 @@ class Castle(QDialog):
 			self.update_unit_labels()
 			mainWindow.show_info()
 		else:
-			self._dialog = QDialog(self)
-			self._dialog.setWindowTitle('!')
-			self._dialog.setStyleSheet("""
-				background-image: url(UI/brown_background.jpg);
-				background-attachment: scroll;
-				border: 2px outset gray;
-				border-radius: 10px;
-				color: white;
-				font-size: 18pt;
-				font: Arial;
-				min-height: 15px;
-				""")
-			layout = QVBoxLayout()  # Pierwszy lepszy layout
-			text = QLabel('Masz za mało złota')
-			layout.addWidget(text)
-			self._dialog.setLayout(layout)
-			self._dialog.exec_()
+			self.not_enough_gold()
 
 	def substract(self):
 		value = self.slider_buy.value()
