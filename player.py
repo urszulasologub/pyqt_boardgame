@@ -73,6 +73,7 @@ class PlayerInfo(QWidget):
 		color = 'darkblue'
 		if player == 'Gracz 1':
 			color = 'darkred'
+		self.color = color
 		self.setStyleSheet("""
 			QDialog, QLabel, QPushButton {
 			background-image: url(UI/brown_background.jpg);

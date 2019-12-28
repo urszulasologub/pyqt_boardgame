@@ -82,4 +82,37 @@ class Alert(QDialog):
 
 		self.setLayout(grid)
 		self.exec_()
+
+
+	def victory(self, main_window, player):
+		self.setWindowTitle('Koniec gry')
+		grid = QGridLayout(self)
+
+		label = QLabel(self)
+		if player.color == 'darkblue':
+			pixmap = QPixmap('UI/blue_victory.png')
+			name = 'Gracz 2'
+		else:
+			pixmap = QPixmap('UI/red_victory.png')
+			name = 'Gracz 1'
+
+		pixmap = pixmap.scaledToWidth(400)
+		label.setPixmap(pixmap)
+		grid.addWidget(label)
+
+		text = 'Zwycięstwo!\nUdało się podbić zamek przeciwnika!\nWygrywa %s' % name
+		message = QLabel(text)
+		grid.addWidget(message)
+
+		ok = QPushButton('OK')
+		ok.clicked.connect(lambda: self.close_all(main_window))
+		grid.addWidget(ok)
+
+		self.setLayout(grid)
+		self.exec_()
+
+	
+	def close_all(self, main_window):
+		self.close()
+		main_window.close()
 		
