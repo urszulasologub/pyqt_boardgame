@@ -134,8 +134,8 @@ class Board(QWidget):
 				self.parent().player1.castle.update_unit_labels()
 				self.parent().player2.castle.update_unit_labels()
 			
-			self.parent().player1.update_gold_amount(self.parent().player1.gold + 1500)
-			self.parent().player2.update_gold_amount(self.parent().player2.gold + 1500)
+			self.parent().player1.update_gold_amount(self.parent().player1.gold + 2500)
+			self.parent().player2.update_gold_amount(self.parent().player2.gold + 2500)
 			
 			
 

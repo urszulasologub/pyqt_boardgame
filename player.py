@@ -269,16 +269,16 @@ class PlayerActions(QWidget):
 		if rand < 28:
 			self.random_fight(player, hero, 'easy', location)
 		elif rand < 65:
-			alert.get_prize(500)
-			player.update_gold_amount(player.gold + 500)
+			alert.get_prize(700)
+			player.update_gold_amount(player.gold + 700)
 		elif rand < 80:
 			self.random_fight(player, hero, 'medium', location)
 		elif rand < 95:
-			alert.get_prize(1000)
-			player.update_gold_amount(player.gold + 1000)
+			alert.get_prize(1200)
+			player.update_gold_amount(player.gold + 1200)
 		elif rand < 98:
-			alert.get_prize(2000)
-			player.update_gold_amount(player.gold + 2000)
+			alert.get_prize(2500)
+			player.update_gold_amount(player.gold + 2500)
 		else:
 			self.random_fight(player, hero, 'hard', location)
 		del alert
@@ -295,7 +295,7 @@ class PlayerActions(QWidget):
 			if self.main_window.week < 5:
 				level_3 = 0
 			bot.h1units = {
-				'level_1': int(randrange(1, 10) * multiplier),
+				'level_1': int(randrange(1, 5) * multiplier),
 				'level_2': int(randrange(2) * multiplier),
 				'level_3': int(level_3),
 				'level_4': 0,
@@ -303,15 +303,15 @@ class PlayerActions(QWidget):
 			}
 			alert.get_battle('easy', bot.h1units)
 		elif level == 'medium':
-			multiplier = self.main_window.week * 2
-			level_3 = randrange(2) * multiplier)
-			level_4 = randrange(1) * multiplier
+			multiplier = self.main_window.week
+			level_3 = randrange(2) * multiplier * 0.5
+			level_4 = randrange(5) * multiplier * 0.1
 			if self.main_window.week < 6:
 				level_3 = 0
 			if self.main_window.week < 10:
 				level_4 = 0
 			bot.h1units = {
-				'level_1': int(randrange(10) * multiplier),
+				'level_1': int(randrange(6) * multiplier),
 				'level_2': int(randrange(1, 5) * multiplier),
 				'level_3': int(level_3),
 				'level_4': int(level_4),
@@ -329,9 +329,9 @@ class PlayerActions(QWidget):
 			if self.main_window.week < 5:	
 				level_5 = 0
 			bot.h1units = {
-				'level_1': int(randrange(50) * multiplier),
-				'level_2': int(randrange(30) * multiplier),
-				'level_3': int(randrange(1, 10) * multiplier),
+				'level_1': int(randrange(20) * multiplier),
+				'level_2': int(randrange(10) * multiplier),
+				'level_3': int(randrange(1, 7) * multiplier),
 				'level_4': int(level_4 * multiplier),
 				'level_5': int(level_5 * multiplier)
 			}

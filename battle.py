@@ -91,11 +91,11 @@ class Battle():
 			'level_4': self.unit_health['level_4'] * self.attacked_hero['level_4'],
 			'level_5': self.unit_health['level_5'] * self.attacked_hero['level_5']
 		}
-		self.attacking_prize = self.attacked_hero['level_1'] * 10 + \
-			self.attacked_hero['level_2'] * 25 + \
-			self.attacked_hero['level_3'] * 50 + \
-			self.attacked_hero['level_4'] * 100 + \
-			self.attacked_hero['level_5'] * 200 
+		self.attacking_prize = self.attacked_hero['level_1'] * 20 + \
+			self.attacked_hero['level_2'] * 40 + \
+			self.attacked_hero['level_3'] * 70 + \
+			self.attacked_hero['level_4'] * 250 + \
+			self.attacked_hero['level_5'] * 500 
 
 		attacking_health = {
 			'level_1': self.unit_health['level_1'] * self.attacking_hero['level_1'],
@@ -105,11 +105,11 @@ class Battle():
 			'level_5': self.unit_health['level_5'] * self.attacking_hero['level_5']
 		}
 
-		self.attacked_prize = self.attacking_hero['level_1'] * 10 + \
-			self.attacking_hero['level_2'] * 25 + \
-			self.attacking_hero['level_3'] * 73 + \
-			self.attacking_hero['level_4'] * 100 + \
-			self.attacking_hero['level_5'] * 200 
+		self.attacked_prize = self.attacking_hero['level_1'] * 20 + \
+			self.attacking_hero['level_2'] * 40 + \
+			self.attacking_hero['level_3'] * 70 + \
+			self.attacking_hero['level_4'] * 250 + \
+			self.attacking_hero['level_5'] * 500 
 		
 		while self.health(attacking_health) > 0 and self.health(attacked_health) > 0:
 			#tura pierwszego gracza:
