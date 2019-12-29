@@ -114,9 +114,9 @@ class Castle(QDialog):
 			self.upgrade.setText('Ulepsz zamek za %d złota' % self.parent().castle_price)
 			mainWindow.show_info()
 		else:
-			self.not_enough_gold()
+			self.error_message('Masz za mało złota')
 
-	def not_enough_gold(self):
+	def error_message(self, msg):
 		self._dialog_error = QDialog(self)
 		self._dialog_error.setWindowTitle('!')
 		self._dialog_error.setStyleSheet("""
@@ -130,7 +130,7 @@ class Castle(QDialog):
 						min-height: 15px;
 						""")
 		layout = QVBoxLayout()  # Pierwszy lepszy layout
-		text = QLabel('Masz za mało złota')
+		text = QLabel(msg)
 		layout.addWidget(text)
 		self._dialog_error.setLayout(layout)
 		self._dialog_error.exec_()
@@ -198,23 +198,7 @@ class Castle(QDialog):
 			self._dialog_buy.setLayout(layout)
 			self._dialog_buy.exec_()
 		else:
-			self._dialog_error = QDialog(self)
-			self._dialog_error.setWindowTitle('!')
-			self._dialog_error.setStyleSheet("""
-				background-image: url(UI/brown_background.jpg);
-				background-attachment: scroll;
-				border: 2px outset gray;
-				border-radius: 10px;
-				color: white;
-				font-size: 18pt;
-				font: Arial;
-				min-height: 15px;
-				""")
-			layout = QVBoxLayout()  # Pierwszy lepszy layout
-			text = QLabel('Brak dostępnych jednostek do kupienia')
-			layout.addWidget(text)
-			self._dialog_error.setLayout(layout)
-			self._dialog_error.exec_()
+			self.error_message('Brak dostępnych jednostek do kupienia')
 
 	def buy(self):
 		mainWindow = self.parent().parent().parent()
@@ -226,7 +210,7 @@ class Castle(QDialog):
 			self.update_unit_labels()
 			mainWindow.show_info()
 		else:
-			self.not_enough_gold()
+			self.error_message('Masz za mało złota')
 
 	def substract(self):
 		value = self.slider_buy.value()
@@ -311,41 +295,9 @@ class Castle(QDialog):
 				self._dialog_team.setLayout(layout)
 				self._dialog_team.exec_()
 			else:
-				self._dialog_error = QDialog(self)
-				self._dial_dialog_errorog.setWindowTitle('!')
-				self._dialog_error.setStyleSheet("""
-					background-image: url(UI/brown_background.jpg);
-					background-attachment: scroll;
-					border: 2px outset gray;
-					border-radius: 10px;
-					color: white;
-					font-size: 18pt;
-					font: Arial;
-					min-height: 15px;
-					""")
-				layout = QVBoxLayout()  # Pierwszy lepszy layout
-				text = QLabel('Brak dostępnych jednostek do dodania')
-				layout.addWidget(text)
-				self._dialog_error.setLayout(layout)
-				self._dialog_error.exec_()
+				self.error_message('Brak dostępnych jednostek do dodania')
 		else:
-			self._dialog_error = QDialog(self)
-			self._dialog_error.setWindowTitle('!')
-			self._dialog_error.setStyleSheet("""
-				background-image: url(UI/brown_background.jpg);
-				background-attachment: scroll;
-				border: 2px outset gray;
-				border-radius: 10px;
-				color: white;
-				font-size: 18pt;
-				font: Arial;
-				min-height: 15px;
-				""")
-			layout = QVBoxLayout()  # Pierwszy lepszy layout
-			text = QLabel('Musisz być w zamku aby przenieść jednostki')
-			layout.addWidget(text)
-			self._dialog_error.setLayout(layout)
-			self._dialog_error.exec_()
+			self.error_message('Musisz być w zamku aby przenieść jednostki')
 
 	def team(self):
 		mainWindow = self.parent().parent().parent()
