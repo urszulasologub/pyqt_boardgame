@@ -110,6 +110,11 @@ class Castle(QDialog):
 			if self.parent().castle_level is 4:
 				self.upgrade.hide()
 			castle_prices = {1 : 3000, 2 : 6500, 3 : 10000, 4 : 0}
+			availability = [[True, True, False, False, False],
+							[True, True, True, False, False],
+							[True, True, True, True, False],
+							[True, True, True, True, True]]
+			self.available = availability[self.parent().castle_level - 1]
 			self.parent().castle_price = castle_prices[self.parent().castle_level]
 			self.upgrade.setText('Ulepsz zamek za %d złota' % self.parent().castle_price)
 			mainWindow.show_info()
