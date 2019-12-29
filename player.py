@@ -28,6 +28,7 @@ class PlayerInfo(QWidget):
 		self.available_heroes = [1]
 		self.hero = 1
 		self.can_move = False
+		self.castle_price = 3000
 
 		self.h1units = {
 			"level_1": 15,
@@ -104,7 +105,7 @@ class PlayerInfo(QWidget):
 			i += 1
 
 		self.setLayout(self.grid)
-		self.update_gold_amount(5000)
+		self.update_gold_amount(2500)
 		#self.update_week_day()
 
 	def show_castle(self):

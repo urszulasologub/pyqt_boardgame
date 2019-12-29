@@ -47,7 +47,7 @@ class Castle(QDialog):
 					  QLabel('Jednostki poziomu 5: %d (%d)' % (self.level5, self.avaliable5))]
 
 		self.upgrade = QPushButton()
-		self.upgrade.setText('Ulepsz zamek za 3000 złota')
+		self.upgrade.setText('Ulepsz zamek za %d złota' % self.parent().castle_price)
 		self.upgrade.clicked.connect(self.upgrade_castle)
 		self.prices = ['60', '100', '400', '1000', '3000']
 		self.available = [True, True, False, False, False]
@@ -96,9 +96,9 @@ class Castle(QDialog):
 
 	def upgrade_castle(self):
 		mainWindow = self.parent().parent().parent()
-		if self.parent().gold >= 3000:
+		if self.parent().gold >= self.parent().castle_price:
 			self.parent().update_castle_level(self.parent().castle_level + 1)
-			self.parent().update_gold_amount(self.parent().gold - 3000)
+			self.parent().update_gold_amount(self.parent().gold - self.parent().castle_price)
 			count = self.available.count(True)
 			self.available[count] = True
 			label = self.unavailable.pop()
@@ -109,6 +109,10 @@ class Castle(QDialog):
 			self._dialog.close()
 			if self.parent().castle_level is 4:
 				self.upgrade.hide()
+			castle_prices = {1 : 3000, 2 : 6500, 3 : 10000, 4 : 0}
+			self.parent().castle_price = castle_prices[self.parent().castle_level]
+			print(self.parent().castle_price)
+			self.upgrade.setText('Ulepsz zamek za %d złota' % self.parent().castle_price)
 			mainWindow.show_info()
 		else:
 			self.not_enough_gold()
