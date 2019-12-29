@@ -297,33 +297,33 @@ class PlayerActions(QWidget):
 			bot.h1units = {
 				'level_1': int(randrange(1, 10) * multiplier),
 				'level_2': int(randrange(2) * multiplier),
-				'level_3': level_3,
+				'level_3': int(level_3),
 				'level_4': 0,
 				'level_5': 0
 			}
 			alert.get_battle('easy', bot.h1units)
 		elif level == 'medium':
-			multiplier = self.main_window.week * 1.5
-			level_3 = randrange(2)
+			multiplier = self.main_window.week * 2
+			level_3 = randrange(2) * multiplier)
 			level_4 = randrange(1) * multiplier
-			if self.main_window.week < 3:
-				level_3 = 0
 			if self.main_window.week < 6:
+				level_3 = 0
+			if self.main_window.week < 10:
 				level_4 = 0
 			bot.h1units = {
 				'level_1': int(randrange(10) * multiplier),
 				'level_2': int(randrange(1, 5) * multiplier),
-				'level_3': int(level_3 * multiplier),
+				'level_3': int(level_3),
 				'level_4': int(level_4),
 				'level_5': 0
 			}
 			alert.get_battle('medium', bot.h1units)
 		else:
-			if self.main_window.week < 3:
+			if self.main_window.week < 8:
 				level_4 = 0
 				multiplier = 0.5
 			else:
-				multiplier = self.main_window.week * 2
+				multiplier = self.main_window.week * 0.3
 				level_4 = randrange(3)
 				level_5 = randrange(2) * 0.25
 			if self.main_window.week < 5:	
