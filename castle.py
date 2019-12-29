@@ -104,14 +104,13 @@ class Castle(QDialog):
 			label = self.unavailable.pop()
 			label.hide()
 			curr_level = 'level_' + str(count + 1)
-			self.parent().available_units[curr_level] = 5
+			self.parent().available_units[curr_level] = 2
 			self.update_unit_labels()
 			self._dialog.close()
 			if self.parent().castle_level is 4:
 				self.upgrade.hide()
 			castle_prices = {1 : 3000, 2 : 6500, 3 : 10000, 4 : 0}
 			self.parent().castle_price = castle_prices[self.parent().castle_level]
-			print(self.parent().castle_price)
 			self.upgrade.setText('Ulepsz zamek za %d złota' % self.parent().castle_price)
 			mainWindow.show_info()
 		else:
