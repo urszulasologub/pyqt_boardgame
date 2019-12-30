@@ -167,7 +167,7 @@ class Board(QWidget):
 		self.parent().special_tiles.clear()
 		self.parent().special_locations.clear()
 		for i in range(1, self.tiles_amount):
-			if randrange(3) == 1 and i is not int(self.tiles_amount / 2):
+			if randrange(2) == 1 and i is not int(self.tiles_amount / 2):
 				self.parent().special_tiles.append(i)
 				self.set_button_stylesheet(self.buttons[i], 'objects/treasure.png')
 				location = self.parent().board.getItemPosition(i)
