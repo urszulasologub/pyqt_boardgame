@@ -265,14 +265,14 @@ class BattleDialog(QDialog):
 		if whose_turn == battle.winner:
 			self.setWindowTitle('Zwycięstwo')
 			label = QLabel(self)
-			pixmap = QPixmap('UI/win.png')
+			pixmap = QPixmap('UI/win.jpeg')
 			pixmap = pixmap.scaledToWidth(450)
 			label.setPixmap(pixmap)
 			grid.addWidget(label)
 		else:
 			self.setWindowTitle('Przegrana')
 			label = QLabel(self)
-			pixmap = QPixmap('UI/lose.png')
+			pixmap = QPixmap('UI/lose.jpg')
 			pixmap = pixmap.scaledToWidth(450)
 			label.setPixmap(pixmap)
 			grid.addWidget(label)
