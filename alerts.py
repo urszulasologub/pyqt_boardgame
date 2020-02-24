@@ -54,7 +54,7 @@ class Alert(QDialog):
 		label = QLabel(self)
 		if level == 'easy':
 			self.setWindowTitle('Łatwa walka')
-			pixmap = QPixmap('sprites/skeleton.png')
+			pixmap = QPixmap('sprites/horse.png')
 			text = 'Zaatakował cię mały oddział.\nCzeka cię łatwa walka'
 		elif level == 'medium':
 			self.setWindowTitle('Średnia walka')

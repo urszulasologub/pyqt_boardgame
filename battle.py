@@ -227,7 +227,6 @@ class BattleDialog(QDialog):
 		self.setStyleSheet("""
 			QDialog, QLabel, QPushButton {
 			background-image: url(UI/brown_background.jpg);
-			background-attachment: scroll;
 			border: 2px outset gray;
 			border-radius: 10px;
 			color: white;
