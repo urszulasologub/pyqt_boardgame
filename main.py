@@ -108,7 +108,7 @@ class Board(QWidget):
 			k += 1
 
 		self.set_button_stylesheet(self.buttons[0], 'objects/castle1.png')
-		self.set_button_stylesheet(self.buttons[int(k / 2)], 'objects/castle1.png')
+		self.set_button_stylesheet(self.buttons[int(k / 2)], 'objects/castle2.png')
 
 		self.tiles_amount = k
 
