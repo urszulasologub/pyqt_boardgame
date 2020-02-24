@@ -266,8 +266,8 @@ class mainWindow(QMainWindow):
 		self.move(0, 0)
 
 		self.setStyleSheet("""
-				background-image: url(./UI/map_visual.png);
-				background-attachment: scroll;
+				background: url(./UI/bright_forest.jpeg) center;
+				background-size:cover;
 			""")
 
 	def show_info(self):
