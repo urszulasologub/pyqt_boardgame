@@ -92,7 +92,7 @@ class PlayerInfo(QWidget):
 		self.grid = QGridLayout(self)
 		self.castle = Castle(self)
 		castle_image = QPushButton()
-		castle_image.setStyleSheet('border-image: url(UI/castle_inside); min-height: 200px; ')
+		castle_image.setStyleSheet('border-image: url(UI/castle_inside.jpeg); min-height: 200px; ')
 		castle_image.clicked.connect(self.show_castle)
 
 		self.grid.addWidget(castle_image, 0, 0)

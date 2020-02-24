@@ -267,8 +267,8 @@ class mainWindow(QMainWindow):
 
 		self.setStyleSheet("""
 				background: url(./UI/bright_forest.jpeg) center;
-				background-size:cover;
 			""")
+
 
 	def show_info(self):
 		self.board_widget.generate_board(self.width, self.height)
