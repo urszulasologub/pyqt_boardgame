@@ -261,7 +261,7 @@ class mainWindow(QMainWindow):
 
 		self.board_widget = Board(self)
 		self.setCentralWidget(self.board_widget)
-		self.setWindowTitle('Heroes of Might and Magic: Gra planszowa')
+		self.setWindowTitle('Heroes: Gra planszowa')
 		#self.showFullScreen()
 		self.move(0, 0)
 
