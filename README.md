@@ -43,7 +43,7 @@ There are three heroes available for each player
 
 ## Credits
 
-Heroes and treasures are drawn by [Daria Lasecka](https://github.com/darialasecka) exclusively for this game.
+Heroes, castles and treasures were drawn by [Daria Lasecka](https://github.com/darialasecka) exclusively for this game.
 
 Free photos were found on [Pexels](https://www.pexels.com/) and free vector graphics are from [Pixabay](https://pixabay.com/)
 
